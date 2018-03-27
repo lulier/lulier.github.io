@@ -3,15 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives: 2018/3 | LeoLu</title>
+  <title>note-3-26 | LeoLu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="LeoLu">
-<meta property="og:url" content="http://yoursite.com/archives/2018/03/index.html">
+  <meta name="description" content="#非线性分类问题分类问题的解决，最重要的是找到分类边界，能够将数据分成不同的区域，从而达到分类的目的。而当分类边界的求解不是一个线性问题的时候，传统的逻辑回归算法需要引入复杂的参数项（$x_{1}^2$,$x_{1}x_{2}$,$x_{1}x_{3}$,$x_{1}x_{4}$,$x_{1}x_{5}$,$x_{1}x_{6}$,$x_{1}x_{7}$…$x_{2}^2$,$x_{2}x_{3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="note-3-26">
+<meta property="og:url" content="http://yoursite.com/2018/03/26/note-3-26/index.html">
 <meta property="og:site_name" content="LeoLu">
+<meta property="og:description" content="#非线性分类问题分类问题的解决，最重要的是找到分类边界，能够将数据分成不同的区域，从而达到分类的目的。而当分类边界的求解不是一个线性问题的时候，传统的逻辑回归算法需要引入复杂的参数项（$x_{1}^2$,$x_{1}x_{2}$,$x_{1}x_{3}$,$x_{1}x_{4}$,$x_{1}x_{5}$,$x_{1}x_{6}$,$x_{1}x_{7}$…$x_{2}^2$,$x_{2}x_{3">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-27T12:47:41.934Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeoLu">
+<meta name="twitter:title" content="note-3-26">
+<meta name="twitter:description" content="#非线性分类问题分类问题的解决，最重要的是找到分类边界，能够将数据分成不同的区域，从而达到分类的目的。而当分类边界的求解不是一个线性问题的时候，传统的逻辑回归算法需要引入复杂的参数项（$x_{1}^2$,$x_{1}x_{2}$,$x_{1}x_{3}$,$x_{1}x_{4}$,$x_{1}x_{5}$,$x_{1}x_{6}$,$x_{1}x_{7}$…$x_{2}^2$,$x_{2}x_{3">
   
     <link rel="alternative" href="/atom.xml" title="LeoLu" type="application/atom+xml">
   
@@ -159,111 +163,99 @@
 		</header>				
 	</div>
 </nav>
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-note-3-26" class="article article-type-post" itemscope itemprop="blogPost">
   
+    <div class="article-meta">
+      <a href="/2018/03/26/note-3-26/" class="article-date">
+  	<time datetime="2018-03-26T04:05:37.000Z" itemprop="datePublished">2018-03-26</time>
+</a>
+    </div>
   
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      note-3-26
+    </h1>
+  
+
+      </header>
       
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
     
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/26/note-3-26/" class="archive-article-date">
-  	<time datetime="2018-03-26T04:05:37.000Z" itemprop="datePublished">Mar 26</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/26/note-3-26/">note-3-26</a>
-    </h1>
-  
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#非线性分类问题<br>分类问题的解决，最重要的是找到分类边界，能够将数据分成不同的区域，从而达到分类的目的。而当分类边界的求解不是一个线性问题的时候，传统的逻辑回归算法需要引入复杂的参数项（$x_{1}^2$,$x_{1}x_{2}$,$x_{1}x_{3}$,$x_{1}x_{4}$,$x_{1}x_{5}$,$x_{1}x_{6}$,$x_{1}x_{7}$…$x_{2}^2$,$x_{2}x_{3}$…）,这会使得计算量过大，不是一种理想的方案。<br><br>这种问题需要通过神经网络来解决。<br><br>区别于经典的逻辑回归算法，神经网络不是尝试去训练一组合适的参数来拟合所有的数据，而是通过训练多组参数将数据分成多步处理。分步过程降低了参数的复杂性，提高了训练的效率。其背后的理论依据，课程里并没有说明。<br><br>我的理解是，神经网络每一层的每一个节点都来自于上一层所有节点的加权和的sigmod求值，这就使得不同参数之间的关联性在每一层计算中都被考虑了进去，充分地考虑了不同参数之间的相互影响。</p>
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/25/overview-of-speech-recognition/" class="archive-article-date">
-  	<time datetime="2018-03-25T06:10:12.845Z" itemprop="datePublished">Mar 25</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/25/overview-of-speech-recognition/">overview of speech recognition</a>
-    </h1>
   
+    <a href="/2018/03/25/overview-of-speech-recognition/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">overview of speech recognition</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/speech-recognition/">speech recognition</a></li></ul>
+  
+</article>
+
+
+<div class="share">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">分享到：</span>
+		<a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/03/22/note-3-22/" class="archive-article-date">
-  	<time datetime="2018-03-22T13:46:09.000Z" itemprop="datePublished">Mar 22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/03/22/note-3-22/">note_week_3</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/machine-learning-regularization/">machine learning regularization</a></li></ul>
-	</div>
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="note-3-26" data-title="note-3-26" data-url="http://yoursite.com/2018/03/26/note-3-26/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
 
 </div>
       <footer id="footer">
@@ -289,8 +281,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false

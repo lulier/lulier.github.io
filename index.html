@@ -161,6 +161,57 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-note-3-26" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/03/26/note-3-26/" class="article-date">
+  	<time datetime="2018-03-26T04:05:37.000Z" itemprop="datePublished">2018-03-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/03/26/note-3-26/">note-3-26</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#非线性分类问题<br>分类问题的解决，最重要的是找到分类边界，能够将数据分成不同的区域，从而达到分类的目的。而当分类边界的求解不是一个线性问题的时候，传统的逻辑回归算法需要引入复杂的参数项（$x_{1}^2$,$x_{1}x_{2}$,$x_{1}x_{3}$,$x_{1}x_{4}$,$x_{1}x_{5}$,$x_{1}x_{6}$,$x_{1}x_{7}$…$x_{2}^2$,$x_{2}x_{3}$…）,这会使得计算量过大，不是一种理想的方案。<br><br>这种问题需要通过神经网络来解决。<br><br>区别于经典的逻辑回归算法，神经网络不是尝试去训练一组合适的参数来拟合所有的数据，而是通过训练多组参数将数据分成多步处理。分步过程降低了参数的复杂性，提高了训练的效率。其背后的理论依据，课程里并没有说明。<br><br>我的理解是，神经网络每一层的每一个节点都来自于上一层所有节点的加权和的sigmod求值，这就使得不同参数之间的关联性在每一层计算中都被考虑了进去，充分地考虑了不同参数之间的相互影响。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  
     <article id="post-overview-of-speech-recognition" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -246,7 +297,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2018/03/22/note-3-22/">note_3_22</a>
+      <a class="article-title" href="/2018/03/22/note-3-22/">note_week_3</a>
     </h1>
   
 
