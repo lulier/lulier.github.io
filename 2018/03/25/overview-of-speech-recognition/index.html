@@ -2,174 +2,224 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
   
   <title>overview of speech recognition | LeoLu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="看了isip上的一个语音设别的介绍，感觉挺有用的，记录一下。 #声学模型 ##声学模型的定义声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。 ##声学模型的作用语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内">
+  <meta name="description" content="看了isip上的一个语音设别的介绍，感觉挺有用的，记录一下。 声学模型声学模型的定义声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。 声学模型的作用语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内容。 马尔可">
 <meta name="keywords" content="speech recognition">
 <meta property="og:type" content="article">
 <meta property="og:title" content="overview of speech recognition">
 <meta property="og:url" content="http://yoursite.com/2018/03/25/overview-of-speech-recognition/index.html">
 <meta property="og:site_name" content="LeoLu">
-<meta property="og:description" content="看了isip上的一个语音设别的介绍，感觉挺有用的，记录一下。 #声学模型 ##声学模型的定义声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。 ##声学模型的作用语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内">
+<meta property="og:description" content="看了isip上的一个语音设别的介绍，感觉挺有用的，记录一下。 声学模型声学模型的定义声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。 声学模型的作用语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内容。 马尔可">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2015-12-14T12:25:17.000Z">
+<meta property="og:updated_time" content="2018-03-28T07:58:02.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="overview of speech recognition">
-<meta name="twitter:description" content="看了isip上的一个语音设别的介绍，感觉挺有用的，记录一下。 #声学模型 ##声学模型的定义声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。 ##声学模型的作用语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内">
-  
-    <link rel="alternative" href="/atom.xml" title="LeoLu" type="application/atom+xml">
+<meta name="twitter:description" content="看了isip上的一个语音设别的介绍，感觉挺有用的，记录一下。 声学模型声学模型的定义声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。 声学模型的作用语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内容。 马尔可">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
   
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
 </head>
 <body>
   <div id="container">
     <div class="left-col">
     <div class="overlay"></div>
 <div class="intrude-less">
-	<header id="header" class="inner">
-		<a href="/" class="profilepic">
-			
-			<img lazy-src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" class="js-avatar">
-			
-		</a>
-
-		<hgroup>
-		  <h1 class="header-author"><a href="/">Leo lu</a></h1>
-		</hgroup>
-
-		
-
-		
-			<div class="switch-btn">
-				<div class="icon">
-					<div class="icon-ctn">
-						<div class="icon-wrap icon-house" data-idx="0">
-							<div class="birdhouse"></div>
-							<div class="birdhouse_holes"></div>
-						</div>
-						<div class="icon-wrap icon-ribbon hide" data-idx="1">
-							<div class="ribbon"></div>
-						</div>
-						
-						
-						<div class="icon-wrap icon-me hide" data-idx="3">
-							<div class="user"></div>
-							<div class="shoulder"></div>
-						</div>
-						
-					</div>
-					
-				</div>
-				<div class="tips-box hide">
-					<div class="tips-arrow"></div>
-					<ul class="tips-inner">
-						<li>菜单</li>
-						<li>标签</li>
-						
-						
-						<li>关于我</li>
-						
-					</ul>
-				</div>
-			</div>
-		
-
-		<div class="switch-area">
-			<div class="switch-wrap">
-				<section class="switch-part switch-part1">
-					<nav class="header-menu">
-						<ul>
-						
-							<li><a href="/">主页</a></li>
-				        
-							<li><a href="/archives">所有文章</a></li>
-				        
-						</ul>
-					</nav>
-					<nav class="header-nav">
-						<div class="social">
-							
-								<a class="github" target="_blank" href="https://github.com/lulier" title="github">github</a>
-					        
-								<a class="weibo" target="_blank" href="http://weibo.com/luzegeng" title="weibo">weibo</a>
-					        
-								<a class="mail" target="_blank" href="/921475341@qq.com" title="mail">mail</a>
-					        
-						</div>
-					</nav>
-				</section>
-				
-				
-				<section class="switch-part switch-part2">
-					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/machine-learning-regularization/" style="font-size: 10px;">machine learning regularization</a> <a href="/tags/speech-recognition/" style="font-size: 20px;">speech recognition</a>
-					</div>
-				</section>
-				
-				
-				
-
-				
-				
-				<section class="switch-part switch-part3">
-				
-					<div id="js-aboutme">courage is knowing what not to fear</div>
-				</section>
-				
-			</div>
-		</div>
-	</header>				
+    <header id="header" class="inner">
+        <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Leo lu</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/lulier" title="github">github</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/machine-learning-regularization/" style="font-size: 10px;">machine learning regularization</a> <a href="/tags/speech-recognition/" style="font-size: 20px;">speech recognition</a>
+                    </div>
+                </section>
+                
+                
+                
+            </div>
+        </div>
+    </header>
 </div>
+
     </div>
     <div class="mid-col">
       <nav id="mobile-nav">
-  	<div class="overlay">
-  		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Leo lu</h1>
-  	</div>
-	<div class="intrude-less">
-		<header id="header" class="inner">
-			<div class="profilepic">
-				<img lazy-src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" class="js-avatar">
-			</div>
-			<hgroup>
-			  <h1 class="header-author">Leo lu</h1>
-			</hgroup>
-			
-			<nav class="header-menu">
-				<ul>
-				
-					<li><a href="/">主页</a></li>
-		        
-					<li><a href="/archives">所有文章</a></li>
-		        
-		        <div class="clearfix"></div>
-				</ul>
-			</nav>
-			<nav class="header-nav">
-				<div class="social">
-					
-						<a class="github" target="_blank" href="https://github.com/lulier" title="github">github</a>
-			        
-						<a class="weibo" target="_blank" href="http://weibo.com/luzegeng" title="weibo">weibo</a>
-			        
-						<a class="mail" target="_blank" href="/921475341@qq.com" title="mail">mail</a>
-			        
-				</div>
-			</nav>
-		</header>				
-	</div>
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Leo lu</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Leo lu</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/lulier" title="github">github</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
 </nav>
       <div class="body-wrap"><article id="post-overview-of-speech-recognition" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/03/25/overview-of-speech-recognition/" class="article-date">
-  	<time datetime="2018-03-25T06:10:12.845Z" itemprop="datePublished">2018-03-25</time>
+      <a  href="/2018/03/25/overview-of-speech-recognition/" class="article-date">
+      <time datetime="2018-03-25T06:10:12.845Z" itemprop="datePublished">2018-03-25</time>
 </a>
+
     </div>
   
   <div class="article-inner">
@@ -185,15 +235,16 @@
     </h1>
   
 
+
       </header>
       
       <div class="article-info article-info-post">
         
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/speech-recognition/">speech recognition</a></li></ul>
-	</div>
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/speech-recognition/">speech recognition</a></li></ul>
+    </div>
 
         <div class="clearfix"></div>
       </div>
@@ -201,14 +252,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+          
         <p>看了<a href="http://www.isip.piconepress.com/projects/speech/software/tutorials/production/fundamentals/v1.0/section_04/" target="_blank" rel="noopener">isip上的一个语音设别的介绍</a>，感觉挺有用的，记录一下。</p>
-<p>#声学模型</p>
-<p>##声学模型的定义<br>声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。</p>
-<p>##声学模型的作用<br>语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内容。</p>
-<p>#马尔可夫链<br>马尔可夫链描述的是一些随机的变量序列，这些变量每一个出现的概率都只跟前一个有关，也就是说，对于序列X,Y,Z而言，其概率</p>
+<h1 id="声学模型"><a href="#声学模型" class="headerlink" title="声学模型"></a>声学模型</h1><h2 id="声学模型的定义"><a href="#声学模型的定义" class="headerlink" title="声学模型的定义"></a>声学模型的定义</h2><p>声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。</p>
+<h2 id="声学模型的作用"><a href="#声学模型的作用" class="headerlink" title="声学模型的作用"></a>声学模型的作用</h2><p>语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内容。</p>
+<h1 id="马尔可夫链"><a href="#马尔可夫链" class="headerlink" title="马尔可夫链"></a>马尔可夫链</h1><p>马尔可夫链描述的是一些随机的变量序列，这些变量每一个出现的概率都只跟前一个有关，也就是说，对于序列X,Y,Z而言，其概率</p>
 <pre><code>P(X,Y,Z) = P(X)P(Y|X)P(Z|Y)
 </code></pre><p>所以，我们只要通过观察得知变量之间的转换概率，就能够得到一个指定序列的概率。</p>
-<p>#隐马尔可夫链<br>隐马尔可夫链是在马尔可夫链的基础上，假设随机变量序列是不可见的，但是会有与变量相关的输出可以观察到，而且指定时刻的输出只与当前的变量有关。<br>因为说话人的说话内容是事先未知的，同时是没有办法观察到的，只能通过收集到的语音音频数据来推断说话人的内容，所以可以用隐马尔可夫模型来模拟语音设别问题。<br>隐马尔可夫链比马尔可夫链具有更大的实用价值，除了用于语音设别，还可以用于搜索引擎网页排序，数据挖掘等，引用<a href="http://www.isip.piconepress.com/projects/speech/software/tutorials/production/fundamentals/v1.0/section_04/" target="_blank" rel="noopener">isip</a>上的一句话：</p>
+<h1 id="隐马尔可夫链"><a href="#隐马尔可夫链" class="headerlink" title="隐马尔可夫链"></a>隐马尔可夫链</h1><p>隐马尔可夫链是在马尔可夫链的基础上，假设随机变量序列是不可见的，但是会有与变量相关的输出可以观察到，而且指定时刻的输出只与当前的变量有关。<br>因为说话人的说话内容是事先未知的，同时是没有办法观察到的，只能通过收集到的语音音频数据来推断说话人的内容，所以可以用隐马尔可夫模型来模拟语音设别问题。<br>隐马尔可夫链比马尔可夫链具有更大的实用价值，除了用于语音设别，还可以用于搜索引擎网页排序，数据挖掘等，引用<a href="http://www.isip.piconepress.com/projects/speech/software/tutorials/production/fundamentals/v1.0/section_04/" target="_blank" rel="noopener">isip</a>上的一句话：</p>
 <blockquote>
 <p>This predictive power makes it well-suited for modeling stochastic (random)events and processes in which we must determine behavior that cannot be directly known.</p>
 </blockquote>
@@ -222,9 +273,25 @@
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2018/03/25/overview-of-speech-recognition/">overview of speech recognition</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 Leo lu 的个人博客">Leo lu</a></p>
+        <p><span>发布时间:</span>2018年03月25日 - 14时10分</p>
+        <p><span>最后更新:</span>2018年03月28日 - 15时58分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/03/25/overview-of-speech-recognition/" title="overview of speech recognition">http://yoursite.com/2018/03/25/overview-of-speech-recognition/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2018/03/25/overview-of-speech-recognition/　　作者: Leo lu" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
 <nav id="article-nav">
   
-    <a href="/2018/03/26/note-3-26/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a  href="/2018/03/26/note-3-26/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
@@ -234,113 +301,225 @@
     </a>
   
   
-    <a href="/2018/03/22/note-3-22/" id="article-nav-older" class="article-nav-link-wrap">
+    <a  href="/2018/03/22/note-3-22/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">note_week_3</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
 </nav>
 
+
   
 </article>
 
-
-<div class="share">
-	<!-- JiaThis Button BEGIN -->
-	<div class="jiathis_style">
-		<span class="jiathis_txt">分享到：</span>
-		<a class="jiathis_button_tsina"></a>
-		<a class="jiathis_button_cqq"></a>
-		<a class="jiathis_button_douban"></a>
-		<a class="jiathis_button_weixin"></a>
-		<a class="jiathis_button_tumblr"></a>
-		<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
-	</div>
-	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
-	<!-- JiaThis Button END -->
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#声学模型"><span class="toc-number">1.</span> <span class="toc-text">声学模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#声学模型的定义"><span class="toc-number">1.1.</span> <span class="toc-text">声学模型的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#声学模型的作用"><span class="toc-number">1.2.</span> <span class="toc-text">声学模型的作用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#马尔可夫链"><span class="toc-number">2.</span> <span class="toc-text">马尔可夫链</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#隐马尔可夫链"><span class="toc-number">3.</span> <span class="toc-text">隐马尔可夫链</span></a></li></ol>
 </div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
 
 
 
-<div class="duoshuo">
-	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="overview-of-speech-recognition" data-title="overview of speech recognition" data-url="http://yoursite.com/2018/03/25/overview-of-speech-recognition/"></div>
-	<!-- 多说评论框 end -->
-	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-	<script type="text/javascript">
-	var duoshuoQuery = {short_name:"true"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		 || document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-	<!-- 多说公共JS代码 end -->
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
 </div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 
 
 
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'xxxx',
+      conf: 'xxxxxxxxx'
+    });
+  </script>
+</section>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2018/03/26/note-3-26/" title="上一篇: note-3-26">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2018/03/22/note-3-22/" title="下一篇: note_week_3">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/03/26/note-3-26/">note-3-26</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/25/overview-of-speech-recognition/">overview of speech recognition</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/22/note-3-22/">note_week_3</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/11/25/speech/">语音设别项目记录</a></li></ul>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
 
 </div>
       <footer id="footer">
-  <div class="outer">
-    <div id="footer-info">
-    	<div class="footer-left">
-    		&copy; 2018 Leo lu
-    	</div>
-      	<div class="footer-right">
-      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
-      	</div>
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2018 Leo lu
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
     </div>
-  </div>
 </footer>
+
     </div>
-    
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-
-<script>
-	var yiliaConfig = {
-		fancybox: true,
-		mathjax: true,
-		animate: true,
-		isHome: false,
-		isPost: true,
-		isArchive: false,
-		isTag: false,
-		isCategory: false,
-		open_in_new: false
-	}
-</script>
-<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
 <script src="/js/main.js"></script>
 
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 1;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'xxxxx', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
 
 
 
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?xxxxxx";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
 
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    tex2jax: {
-        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    }
-});
 
-MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-        all[i].SourceElement().parentNode.className += ' has-jax';                 
-    }       
-});
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
 </script>
 
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
 </script>
 
 
