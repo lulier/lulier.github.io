@@ -43,7 +43,7 @@
     
     <title>
         
-            机器学习参数优化 | 
+            overview of speech recognition | 
         
         LeoLu
     </title>
@@ -54,7 +54,7 @@
 
     <meta name="format-detection" content="telephone=no"/>
     <meta name="description" itemprop="description" content="">
-    <meta name="keywords" content="">
+    <meta name="keywords" content=",speech recognition">
     <meta name="theme-color" content="#0097A7">
 
     <!-- Disable Fucking Bloody Baidu Tranformation -->
@@ -234,7 +234,7 @@
     <!-- WebAPP Icons -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="LeoLu">
-    <meta name="msapplication-starturl" content="http://lulier.github.io/2018/05/26/New Document/">
+    <meta name="msapplication-starturl" content="http://lulier.github.io/2017/08/26/overview-of-speech-recognition/">
     <meta name="msapplication-navbutton-color" content="#0097A7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="LeoLu">
@@ -249,16 +249,16 @@
     
 
     <!-- The Open Graph protocol -->
-    <meta property="og:url" content="http://lulier.github.io/2018/05/26/New Document/">
+    <meta property="og:url" content="http://lulier.github.io/2017/08/26/overview-of-speech-recognition/">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="机器学习参数优化 | LeoLu">
+    <meta property="og:title" content="overview of speech recognition | LeoLu">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
-    
+    <meta property="og:article:tag" content="speech recognition"> 
 
     
-        <meta property="article:published_time" content="Sat May 26 2018 12:05:37 GMT+0800">
-        <meta property="article:modified_time" content="Mon Aug 13 2018 10:30:45 GMT+0800">
+        <meta property="article:published_time" content="Sat Aug 26 2017 12:05:37 GMT+0800">
+        <meta property="article:modified_time" content="Mon Aug 13 2018 14:58:27 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -266,7 +266,7 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="http://lulier.github.io/2018/05/26/New Document/index.html" />
+        <link rel="canonical" href="http://lulier.github.io/2017/08/26/overview-of-speech-recognition/index.html" />
     
 
     <!-- Structured-data for SEO -->
@@ -278,10 +278,10 @@
 {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "mainEntityOfPage": "http://lulier.github.io/2018/05/26/New Document/index.html",
-    "headline": "机器学习参数优化",
-    "datePublished": "Sat May 26 2018 12:05:37 GMT+0800",
-    "dateModified": "Mon Aug 13 2018 10:30:45 GMT+0800",
+    "mainEntityOfPage": "http://lulier.github.io/2017/08/26/overview-of-speech-recognition/index.html",
+    "headline": "overview of speech recognition",
+    "datePublished": "Sat Aug 26 2017 12:05:37 GMT+0800",
+    "dateModified": "Mon Aug 13 2018 14:58:27 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -299,7 +299,7 @@
             "url": "/img/favicon.png"
         }
     },
-    "keywords": "",
+    "keywords": ",speech recognition",
     "description": "",
 }
 </script>
@@ -359,6 +359,15 @@
     <!-- Left aligned menu below button -->
     
     
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#声学模型"><span class="post-toc-number">1.</span> <span class="post-toc-text">声学模型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#声学模型的定义"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">声学模型的定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#声学模型的作用"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">声学模型的作用</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#马尔可夫链"><span class="post-toc-number">2.</span> <span class="post-toc-text">马尔可夫链</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#隐马尔可夫链"><span class="post-toc-number">3.</span> <span class="post-toc-text">隐马尔可夫链</span></a></li></ol>
+    </ul>
+    
 
 
 
@@ -388,7 +397,7 @@
         
     
             <p class="article-headline-p">
-                机器学习参数优化
+                overview of speech recognition
             </p>
         </div>
 
@@ -407,7 +416,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>Leo lu</strong>
-        <span>5月 26, 2018</span>
+        <span>8月 26, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -425,6 +434,15 @@
 
     <!-- Tags (bookmark) -->
     
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/speech-recognition/">speech recognition</a>
+    </ul>
+    
 
     <!-- Share -->
     
@@ -439,7 +457,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=机器学习参数优化&url=http://lulier.github.io/2018/05/26/New Document/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=overview of speech recognition&url=http://lulier.github.io/2017/08/26/overview-of-speech-recognition/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -448,7 +466,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=机器学习参数优化&url=http://lulier.github.io/2018/05/26/New Document/index.html&via=Leo lu" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=overview of speech recognition&url=http://lulier.github.io/2017/08/26/overview-of-speech-recognition/index.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -457,7 +475,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/05/26/New Document/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2017/08/26/overview-of-speech-recognition/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -466,7 +484,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/05/26/New Document/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2017/08/26/overview-of-speech-recognition/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -491,8 +509,19 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <p>training data，cross variation data， test data（60%，20%，20%）对应有 Jtrain（），JCV（），JTest（）<br>决定假设函数的级数d<br>决定正则化的参数lamda<br>plot learning curve to detect bias or variance problem<br>计算Jtrain（），JCV（），JTest（）的时候lamda要设置为0<br>在画学习曲线的时候，在样本量较小的情况下，可以通过多次随机抽取相等数量的测试用例最后求平均数来减小误差。（比如随机抽取十个样本计算样本量为十时的Jtrain（）和JCV（），重复五十次，最后求这五十次的平均数，作为最终的样本量为十的Jtrain（）和JCV（））</p>
-<p>如何入手去分析一个机器学习问题，<br>在列出了可能提交机器学习结果的方法之后如何选择<br>error analysis<br>1、start simple,can implete quickly<br>2、use learning curve to check correctness<br>3、manually analysis the error your algrithom make, find most common mistack it make,then try to optimise it and test its error rate to check if improve<br>4、对于分类问题中，某个分类的占比较小的分类问题，例如所有病人中患癌症的比例，单纯使用error rate来评估算法是不够的，还需要计算算法的precision和recall<br>5、evaluation algrithom use f score = 2<em>（precision</em>recall）/（precision + recall）<br>概率论<br>全概率<br>贝叶斯定理<br>二项分布<br>泊松分布<br>泊松分布可以逼近二项分布</p>
+        <p>看了<a href="http://www.isip.piconepress.com/projects/speech/software/tutorials/production/fundamentals/v1.0/section_04/" target="_blank" rel="noopener">isip上的一个语音设别的介绍</a>，感觉挺有用的，记录一下。</p>
+<h1 id="声学模型"><a href="#声学模型" class="headerlink" title="声学模型"></a>声学模型</h1><h2 id="声学模型的定义"><a href="#声学模型的定义" class="headerlink" title="声学模型的定义"></a>声学模型的定义</h2><p>声学模型是对语音在发声层面上的数字描述。这个定义涉及到了两个概念，第一个是语音，即音标，将单词的发音限制在有些的音标组合中；第二个是音标的数字描述，通过对发声信号的特征向量的提取来数字化描述音标。</p>
+<h2 id="声学模型的作用"><a href="#声学模型的作用" class="headerlink" title="声学模型的作用"></a>声学模型的作用</h2><p>语音设别的过程就通过将说话者语音在声学特征上的度量跟声学模型中的标准进行比较来分析说话者的内容。</p>
+<h1 id="马尔可夫链"><a href="#马尔可夫链" class="headerlink" title="马尔可夫链"></a>马尔可夫链</h1><p>马尔可夫链描述的是一些随机的变量序列，这些变量每一个出现的概率都只跟前一个有关，也就是说，对于序列X,Y,Z而言，其概率</p>
+<pre><code>P(X,Y,Z) = P(X)P(Y|X)P(Z|Y)
+</code></pre><p>所以，我们只要通过观察得知变量之间的转换概率，就能够得到一个指定序列的概率。</p>
+<h1 id="隐马尔可夫链"><a href="#隐马尔可夫链" class="headerlink" title="隐马尔可夫链"></a>隐马尔可夫链</h1><p>隐马尔可夫链是在马尔可夫链的基础上，假设随机变量序列是不可见的，但是会有与变量相关的输出可以观察到，而且指定时刻的输出只与当前的变量有关。<br>因为说话人的说话内容是事先未知的，同时是没有办法观察到的，只能通过收集到的语音音频数据来推断说话人的内容，所以可以用隐马尔可夫模型来模拟语音设别问题。<br>隐马尔可夫链比马尔可夫链具有更大的实用价值，除了用于语音设别，还可以用于搜索引擎网页排序，数据挖掘等，引用<a href="http://www.isip.piconepress.com/projects/speech/software/tutorials/production/fundamentals/v1.0/section_04/" target="_blank" rel="noopener">isip</a>上的一句话：</p>
+<blockquote>
+<p>This predictive power makes it well-suited for modeling stochastic (random)events and processes in which we must determine behavior that cannot be directly known.</p>
+</blockquote>
+<p>#隐马尔可夫链在声学模型建模中的作用</p>
+<p>#word level和phoneme level的隐马尔可夫链</p>
+<p>#怎么在这些远离的基础上去使用gop算法</p>
 
         
     
@@ -542,7 +571,7 @@
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2018/06/08/Deep learning/" id="post_nav-newer" class="prev-content">
+        <a href="/2018/03/22/note-3-22/" id="post_nav-newer" class="prev-content">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_back</i>
             </button>
@@ -556,7 +585,7 @@
 
     <!-- Next Nav -->
     
-        <a href="/2018/05/26/SVM/" id="post_nav-older" class="next-content">
+        <a href="/2015/11/25/speech/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
