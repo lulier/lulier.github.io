@@ -43,6 +43,8 @@
     
     <title>
         
+            微信小游戏开发--界面设配 | 
+        
         LeoLu
     </title>
 
@@ -232,7 +234,7 @@
     <!-- WebAPP Icons -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="LeoLu">
-    <meta name="msapplication-starturl" content="http://lulier.github.io/opencv.html">
+    <meta name="msapplication-starturl" content="http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/">
     <meta name="msapplication-navbutton-color" content="#0097A7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="LeoLu">
@@ -247,13 +249,16 @@
     
 
     <!-- The Open Graph protocol -->
-    <meta property="og:url" content="http://lulier.github.io/opencv.html">
+    <meta property="og:url" content="http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="LeoLu">
+    <meta property="og:title" content="微信小游戏开发--界面设配 | LeoLu">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
     
 
+    
+        <meta property="article:published_time" content="Mon Aug 13 2018 11:01:21 GMT+0800">
+        <meta property="article:modified_time" content="Mon Aug 13 2018 11:19:06 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -261,13 +266,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="http://lulier.github.io/opencv.html" />
+        <link rel="canonical" href="http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
 
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/index.html",
+    "headline": "微信小游戏开发--界面设配",
+    "datePublished": "Mon Aug 13 2018 11:01:21 GMT+0800",
+    "dateModified": "Mon Aug 13 2018 11:19:06 GMT+0800",
+    "author": {
+        "@type": "Person",
+        "name": "Leo lu",
+        "image": {
+            "@type": "ImageObject",
+            "url": "http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg"
+        },
+        "description": "Carpe diem"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "LeoLu",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": "",
+    "description": "",
+}
+</script>
 
 
     
@@ -303,6 +338,39 @@
 
                     <!-- Post TOC -->
 
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#界面适配和制作方案"><span class="post-toc-number">1.</span> <span class="post-toc-text">界面适配和制作方案</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#界面适配"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">界面适配</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Canvas-缩放适配"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">Canvas 缩放适配</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#widget组件布局适配"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">widget组件布局适配</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#界面制作"><span class="post-toc-number">1.1.3.</span> <span class="post-toc-text">界面制作</span></a></li></ol></li></ol></li></ol>
+    </ul>
+    
+
+
+
 
 <!-- Layouts -->
 
@@ -329,7 +397,7 @@
         
     
             <p class="article-headline-p">
-                
+                微信小游戏开发--界面设配
             </p>
         </div>
 
@@ -380,7 +448,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=&url=http://lulier.github.io/opencv.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发--界面设配&url=http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -389,7 +457,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=&url=http://lulier.github.io/opencv.html&via=Leo lu" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发--界面设配&url=http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/index.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -398,7 +466,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/opencv.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -407,7 +475,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/opencv.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/08/13/微信小游戏开发-界面设配/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -432,7 +500,15 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <p>折腾了好久，总算把opencv的环境配置起来了，使用的是opencv-2.4.13，vs 版本是2015<br>这个教程比较详细，<a href="https://blog.csdn.net/u010381648/article/details/52493649" target="_blank" rel="noopener">https://blog.csdn.net/u010381648/article/details/52493649</a></p>
+        <h1 id="界面适配和制作方案"><a href="#界面适配和制作方案" class="headerlink" title="界面适配和制作方案"></a>界面适配和制作方案</h1><h2 id="界面适配"><a href="#界面适配" class="headerlink" title="界面适配"></a>界面适配</h2><pre><code>Cocos creator的界面适配分为整体的canvas画布缩放和在界面内部使用widget组件的对齐布局。
+</code></pre><h3 id="Canvas-缩放适配"><a href="#Canvas-缩放适配" class="headerlink" title="Canvas 缩放适配"></a>Canvas 缩放适配</h3><p><img src="/images/1.png" alt=""><br>Cocos creator的canvas适配主要通过三个参数来控制：</p>
+<p>Design Resolution：UI界面的设计分辨率。</p>
+<p>Fit Height：按照高度适配，如果勾选了这个选项，在实际屏幕分辨率与设计分辨率的宽高比不同的情况下，cocos会使用高度优先适配的方式进行缩放。</p>
+<p>Fit Width：按照宽度适配，如果勾选了这个选项，在实际屏幕分辨率与设计分辨率的宽高比不同的情况下，cocos会使用宽度优先适配的方式进行缩放。<br>我们游戏采用的是iphone 6的屏幕尺寸作为设计分辨率，即 1334 * 750。Canvas组件控制的主要是界面元素的缩放比例，cocos推荐的是在实际屏幕尺寸的宽高比大于设计分辨率的宽高比的时候采用按宽度适配，反之使用高度适配。但是我们在实践中发现，这种适配方案会导致在高分辨率手机上出现界面元素过度放大的问题，这使得在下一步使用widget布局的混乱，无法使用一套固定的widget布局适应所有的分辨率，如图1.1-1和1.1-2所示，在1.1-1中使用了宽度适配，中间的坦克logo过度放大了，与下方的文字发生了重叠。而在1.1-2中使用了高度适配，则保持了原有设计分辨率下的布局。所以我们采用了跟cocos推荐相反的canvas缩放方案，在实际屏幕尺寸宽高比大于设计分辨率的时候使用按高度适配，反之使用按宽度适配。<br><img src="/images/2.png" alt=""><br>                                                1.1-1<br><img src="/images/3.png" alt=""><br>                                                1.1-2</p>
+<h3 id="widget组件布局适配"><a href="#widget组件布局适配" class="headerlink" title="widget组件布局适配"></a>widget组件布局适配</h3><p>cocos creator提供了widget组件进行界面内布局。</p>
+<p>Widget的使用首先是指定一个Target node作为对齐的节点，默认使用父节点对齐。然后通过设置Left，Top，Right，Bottom四个参数调整节点在界面上的布局。其中，Left指的是当前节点的左边界到Target节点左边界的距离，单位可以是像素也可以是百分比，其他的三个参数以此类推。需要注意的是，当使用像素作为距离的单位时，这个距离是相对于设计分辨率而言，实际的距离依赖于屏幕的实际尺寸。例如，设置Left为667px，在iPhone X下，实际的Left距离为（667*（1125/750） = 1000.5px）。在实际使用中，需要在不同分辨率下测试，设置一个合理的数值。<br>这四个参数也支持在程序运行时动态的修改，在修改完相应的参数之后，需要调用widget组件的updateAlignment接口。</p>
+<h3 id="界面制作"><a href="#界面制作" class="headerlink" title="界面制作"></a>界面制作</h3><p>在制作一个独立的界面的时候，通常第一步是创建一个充满屏幕的UI根节点，如图2.0-1所示，其它的UI子节点都是直接或者间接的相对于这个根节点进行布局。</p>
+<p><img src="/images/4.png" alt=""><br>                                                2.0-1<br>    接着将美术的设计图拖到根节点下，把设计图作为背景来制作界面，按照设计图给出的样式对UI节点进行布局。如图2.0-2所示，<br><img src="/images/5.png" alt=""><br>                                                2.0-2<br>    在界面的制作过程中应尽量将界面按照上下左右和中间拆成不同的小模块来制作，方便布局和适配。<br><img src="/images/6.png" alt=""><br>                                                2.0-3</p>
 
         
     
@@ -487,6 +563,14 @@
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
+    
+        <a href="/2018/06/08/Deep learning/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
     
 </nav>
 
@@ -638,6 +722,14 @@ It will not impact the appearance and can give developers a lot of support :)
 </aside>
 
                     
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
 
                     
 
