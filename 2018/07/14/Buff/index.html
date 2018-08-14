@@ -43,7 +43,7 @@
     
     <title>
         
-            标签: speech recognition | 
+            微信小游戏--Buff系统设计 | 
         
         LeoLu
     </title>
@@ -234,7 +234,7 @@
     <!-- WebAPP Icons -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="LeoLu">
-    <meta name="msapplication-starturl" content="http://lulier.github.io/tags/speech-recognition/">
+    <meta name="msapplication-starturl" content="http://lulier.github.io/2018/07/14/Buff/">
     <meta name="msapplication-navbutton-color" content="#0097A7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="LeoLu">
@@ -249,13 +249,16 @@
     
 
     <!-- The Open Graph protocol -->
-    <meta property="og:url" content="http://lulier.github.io/tags/speech-recognition/">
+    <meta property="og:url" content="http://lulier.github.io/2018/07/14/Buff/">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="标签: speech recognition | LeoLu">
+    <meta property="og:title" content="微信小游戏--Buff系统设计 | LeoLu">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
     
 
+    
+        <meta property="article:published_time" content="Sat Jul 14 2018 12:47:52 GMT+0800">
+        <meta property="article:modified_time" content="Tue Aug 14 2018 12:53:46 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -263,13 +266,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="http://lulier.github.io/tags/speech-recognition/index.html" />
+        <link rel="canonical" href="http://lulier.github.io/2018/07/14/Buff/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
 
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "http://lulier.github.io/2018/07/14/Buff/index.html",
+    "headline": "微信小游戏--Buff系统设计",
+    "datePublished": "Sat Jul 14 2018 12:47:52 GMT+0800",
+    "dateModified": "Tue Aug 14 2018 12:53:46 GMT+0800",
+    "author": {
+        "@type": "Person",
+        "name": "Leo lu",
+        "image": {
+            "@type": "ImageObject",
+            "url": "http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg"
+        },
+        "description": "Carpe diem"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "LeoLu",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": "",
+    "description": "",
+}
+</script>
 
 
     
@@ -303,149 +336,256 @@
                         </button>
                     
 
-                    <!-- Index Module -->
-<div class="material-index mdl-grid">
-    
-    <div class="locate-thumbnail-symbol"></div>
+                    <!-- Post TOC -->
 
-    <!-- Pin on top -->
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解决问题"><span class="post-toc-number">1.</span> <span class="post-toc-text">解决问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#需求要点"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">需求要点</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#难点"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">难点</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解决方案"><span class="post-toc-number">2.</span> <span class="post-toc-text">解决方案</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#概要设计"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">概要设计</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#详细设计"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">详细设计</span></a></li></ol></li></ol>
+    </ul>
     
 
-    <!-- Normal Post -->
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
     
         
             <!-- Random Thumbnail -->
             <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
 
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/2017/08/26/overview-of-speech-recognition/">overview of speech recognition</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            看了
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/2017/08/26/overview-of-speech-recognition/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" width="44px" height="44px" alt="Leo lu's avatar">
-            </div>
-            <div>
-                <strong>Leo lu</strong>
-                <span>8月 26, 2017</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-          
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
-    
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/2015/11/25/speech/">语音设别项目记录</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            搭了hexo很久了，并没有真的在上面写过博客，正好现在要做毕业设计，就把做毕设过程中看的学的一些东西用博客记录一下。今天看了
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/2015/11/25/speech/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" width="44px" height="44px" alt="Leo lu's avatar">
-            </div>
-            <div>
-                <strong>Leo lu</strong>
-                <span>11月 25, 2015</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-          
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-
-    
-
-    
-        <script type="text/ls-javascript" id="thumbnail-script">
-    var randomNum;
-
-    var locatePost = $('.locate-thumbnail-symbol').next();
-    for(var i = 0; i < 10; i++) {
-        randomNum = Math.floor(Math.random() * 19 + 1);
-
-        locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
-        locatePost.children('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
     $('.post_thumbnail-random').addClass('lazy');
-
-        locatePost = locatePost.next();
-    }
 </script>
 
+        
+    
+            <p class="article-headline-p">
+                微信小游戏--Buff系统设计
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>Leo lu</strong>
+        <span>7月 14, 2018</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+
+    <!-- Share -->
+    
+        <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏--Buff系统设计&url=http://lulier.github.io/2018/07/14/Buff/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏--Buff系统设计&url=http://lulier.github.io/2018/07/14/Buff/index.html&via=Leo lu" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/07/14/Buff/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/07/14/Buff/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
     
 </div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <h2 id="解决问题"><a href="#解决问题" class="headerlink" title="解决问题"></a>解决问题</h2><h3 id="需求要点"><a href="#需求要点" class="headerlink" title="需求要点"></a>需求要点</h3><p>BUFF 是现在网络游戏中非常常见的一个术语，简单来说，给角色加一个 BUFF 通常意味着对虚拟角色的一些数值上的临时修正，同时为角色添加一些指定的表现效果。所以buff系统设计的需求主要有两个方面，一个是对角色的数值进行修改，另一个就是给角色添加表现特效。</p>
+<h3 id="难点"><a href="#难点" class="headerlink" title="难点"></a>难点</h3><ol>
+<li>针对buff系统的第一个需求，存在的难点主要是数值的修改有可能是不可逆的。通常在对角色添加一个buff的时候，都会临时修改角色的数值，而在buff移除的时候，又需要将数值恢复。这个过程有可能是不可逆的，比如浮点数的加减乘除运算。不可逆的过程会使得游戏产生数值上的偏差，多个偏差的累加会导致最终游戏的表现与预期不同。另一种不可逆的情况是如果buff的效果是直接将数值修改成某个指定的值，在没有缓存的情况下，是完全不可逆的。</li>
+<li>Buff系统第二个需求的难点主要是特效生命周期的管理，需要考虑的问题有特效的预加载，播放时机，播放位置，回收时机等。</li>
+</ol>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="概要设计"><a href="#概要设计" class="headerlink" title="概要设计"></a>概要设计</h3><p><img src="/images/8.png" alt=""></p>
+<h3 id="详细设计"><a href="#详细设计" class="headerlink" title="详细设计"></a>详细设计</h3><ol>
+<li>针对Buff系统的第一个难点，buff基类在设计的时候使用了execute和remove两个配对的接口，execute接口会先缓存要改变的角色数值，然后再对数值进行操作，remove接口会在buff释放的时候还原数值，同时回收特效。update接口用于对数值进行渐变处理，同时更新特效的位置和旋转。</li>
+<li>针对Buff系统的第二个难点，EffectManager会在战场初始化的时候，根据策划的配置，对指定的特效资源进行预加载和预创建。为了避免打乱角色的渲染批次，buff特效并不会直接挂在角色身上，而是挂在与角色不同的层级上，通过buff的update来更新特效的位置和旋转，保持与角色同步。在buff的生命周期结束的时候，会将特效返回缓存池中复用。</li>
+</ol>
+
+        
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+    <!-- 使用 Gitalk -->
+<div id="gitalk-comment">
+    <!-- Gitalk 评论框 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<script>
+    var gitalk = new Gitalk({
+            clientID: '083ec5bf441d6a1f24f9',
+            clientSecret: 'd0168cdf5fbe7c6e74df2d4062129de3a08622cb',
+            repo: 'lulier.github.io',
+            owner: 'lulier',
+            admin: ['lulier'],
+            // facebook-like distraction free mode
+            distractionFreeMode: false
+        })
+   gitalk.render('gitalk-container')
+</script>
+</div>
+<style>
+    #gitalk-comment {
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2018/08/13/微信小游戏开发-界面设配/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2018/06/08/Deep learning/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
 
 
                     
@@ -591,6 +731,14 @@ It will not impact the appearance and can give developers a lot of support :)
 </aside>
 
                     
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
 
                     
 
