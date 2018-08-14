@@ -258,7 +258,7 @@
 
     
         <meta property="article:published_time" content="Sat Apr 14 2018 11:22:13 GMT+0800">
-        <meta property="article:modified_time" content="Thu Jul 26 2018 21:41:30 GMT+0800">
+        <meta property="article:modified_time" content="Tue Aug 14 2018 13:37:49 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -281,7 +281,7 @@
     "mainEntityOfPage": "http://lulier.github.io/2018/04/14/CUDA/index.html",
     "headline": "CUDA programming",
     "datePublished": "Sat Apr 14 2018 11:22:13 GMT+0800",
-    "dateModified": "Thu Jul 26 2018 21:41:30 GMT+0800",
+    "dateModified": "Tue Aug 14 2018 13:37:49 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -450,7 +450,7 @@
     
         <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=CUDA programming&url=http://lulier.github.io/2018/04/14/CUDA/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
-                Share to Weibo
+                Auf Weibo teilen
             </li>
         </a>
     
@@ -459,7 +459,7 @@
     
         <a class="post_share-link" href="https://twitter.com/intent/tweet?text=CUDA programming&url=http://lulier.github.io/2018/04/14/CUDA/index.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
-                Share to Twitter
+                Auf Twitter teilen
             </li>
         </a>
     
@@ -468,7 +468,7 @@
     
         <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/04/14/CUDA/index.html" target="_blank">
             <li class="mdl-menu__item">
-                Share to Facebook
+                Auf Facebook teilen
             </li>
         </a>
     
@@ -477,7 +477,7 @@
     
         <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/04/14/CUDA/index.html" target="_blank">
             <li class="mdl-menu__item">
-                Share to Google+
+                Auf Google+ teilen
             </li>
         </a>
     
@@ -500,22 +500,13 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <h1 id="CUDA-programing"><a href="#CUDA-programing" class="headerlink" title="CUDA programing"></a>CUDA programing</h1><pre><code>cuda是英伟达开发的用于在计算器上实现并行编程的集成技术，对于图像处理来说，输入端通常都是成千上万个像素，相对于cpu，gpu具有更大的吞吐量，可以一次性对大量的数据进行处理，这个真符合图像处理的特性。
-一个典型的cuda程序工作流程是，cpu作为main程序的入口，将数据传入gpu的内存中，然后启动gpu中的cuda（kernel程序）程序进行计算，最后gpu再将计算结果返回给cpu。
-将学习过程中一下重要的知识点记录下来：
-</code></pre><h1 id="CUDA-communication-pattern"><a href="#CUDA-communication-pattern" class="headerlink" title="CUDA communication pattern"></a>CUDA communication pattern</h1><pre><code>cuda的thread对内存的操作有多种形式，分别是map，gather，stencil，transpose
-</code></pre><h1 id="gpu-hardware"><a href="#gpu-hardware" class="headerlink" title="gpu hardware"></a>gpu hardware</h1><pre><code>gpu是通过多个SM（streaming multiprocessors）组成的，不同的SM之间并行独立运行，gpu负责将程序中不同块的任务分配到SM上，即一个block对应一个SM。gpu并不会保证thread block的执行顺序，也不会限定同时运行的SM数量，这样可以高效的运行block任务，同时具有
-较好的平台兼容性（同一份代码可以在具有不同数量SM的gpu上执行）。
-gpu会保证运行同个kernel的SM都执行完毕之后，才会去执行运行下个kernel的SM。
-</code></pre><h1 id="编程策略"><a href="#编程策略" class="headerlink" title="编程策略"></a>编程策略</h1><pre><code>1、maximize compute ops per thread
-2、minimize time spent on memory per thread
-    move frequently-accessed data to fast memory（local &gt; shared &gt;&gt; global &gt;&gt; cpu &apos;host&apos;）
-    coalesce access to the glocal memory(gpu每次访问内存空间是以一个区块为单位访问的，访问连续的内存空间可以减少内存的访问次数，提高效率)
-    avoid thread divergence
-</code></pre><h1 id="CUDA-memory"><a href="#CUDA-memory" class="headerlink" title="CUDA memory"></a>CUDA memory</h1><pre><code>gpu的内存有三种，线程自己的有个local memory，同一个block的线程有个共享的share memory，不同block之间有个global memory。
-由于同一个block的不同的线程可能操作同一块share memory，不同block的线程可能操作global memory，所以需要写同步代码来避免冲突。
-</code></pre><h1 id="scan"><a href="#scan" class="headerlink" title="scan"></a>scan</h1><h1 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h1><h1 id="histogram"><a href="#histogram" class="headerlink" title="histogram"></a>histogram</h1><h1 id="Udacity-assignment"><a href="#Udacity-assignment" class="headerlink" title="Udacity assignment"></a>Udacity assignment</h1><pre><code>由于Udacity这个课程估计下架了，作业都没有支持了，提供的github版本又只能是mac能跑，暂时不做，回头再用mac做
-</code></pre>
+        <h1 id="CUDA-programing"><a href="#CUDA-programing" class="headerlink" title="CUDA programing"></a>CUDA programing</h1><p>cuda是英伟达开发的用于在计算器上实现并行编程的集成技术，对于图像处理来说，输入端通常都是成千上万个像素，相对于cpu，gpu具有更大的吞吐量，可以一次性对大量的数据进行处理，这个真符合图像处理的特性。一个典型的cuda程序工作流程是，cpu作为main程序的入口，将数据传入gpu的内存中，然后启动gpu中的cuda（kernel程序）程序进行计算，最后gpu再将计算结果返回给cpu。</p>
+<h1 id="CUDA-communication-pattern"><a href="#CUDA-communication-pattern" class="headerlink" title="CUDA communication pattern"></a>CUDA communication pattern</h1><p>cuda的thread对内存的操作有多种形式，分别是map，gather，stencil，transpose</p>
+<h1 id="gpu-hardware"><a href="#gpu-hardware" class="headerlink" title="gpu hardware"></a>gpu hardware</h1><p>gpu是通过多个SM（streaming multiprocessors）组成的，不同的SM之间并行独立运行，gpu负责将程序中不同块的任务分配到SM上，即一个block对应一个SM。gpu并不会保证thread block的执行顺序，也不会限定同时运行的SM数量，这样可以高效的运行block任务，同时具有较好的平台兼容性（同一份代码可以在具有不同数量SM的gpu上执行）。gpu会保证运行同个kernel的SM都执行完毕之后，才会去执行运行下个kernel的SM。</p>
+<h1 id="编程策略"><a href="#编程策略" class="headerlink" title="编程策略"></a>编程策略</h1><p>1、maximize compute ops per thread<br>2、minimize time spent on memory per thread move frequently-accessed data to fast memory（local &gt; shared &gt;&gt; global &gt;&gt; cpu ‘host’）<br>coalesce access to the glocal memory(gpu每次访问内存空间是以一个区块为单位访问的，访问连续的内存空间可以减少内存的访问次数，提高效率avoid thread divergence</p>
+<h1 id="CUDA-memory"><a href="#CUDA-memory" class="headerlink" title="CUDA memory"></a>CUDA memory</h1><p>gpu的内存有三种，线程自己的有个local memory，同一个block的线程有个共享的share memory，不同block之间有个global memory。<br>由于同一个block的不同的线程可能操作同一块share memory，不同block的线程可能操作global memory，所以需要写同步代码来避免冲突。</p>
+<h1 id="scan"><a href="#scan" class="headerlink" title="scan"></a>scan</h1><h1 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h1><h1 id="histogram"><a href="#histogram" class="headerlink" title="histogram"></a>histogram</h1><h1 id="Udacity-assignment"><a href="#Udacity-assignment" class="headerlink" title="Udacity assignment"></a>Udacity assignment</h1><p>由于Udacity这个课程估计下架了，作业都没有支持了，提供的github版本又只能是mac能跑，暂时不做，回头再用mac做</p>
+
         
     
 
@@ -569,7 +560,7 @@ gpu会保证运行同个kernel的SM都执行完毕之后，才会去执行运行
                 <i class="material-icons">arrow_back</i>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Newer
+            Neuren
         </a>
     
 
@@ -579,7 +570,7 @@ gpu会保证运行同个kernel的SM都执行完毕之后，才会去执行运行
     <!-- Next Nav -->
     
         <a href="/2018/03/26/note-3-26/" id="post_nav-older" class="next-content">
-            Older
+            Älteren
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_forward</i>
@@ -665,7 +656,7 @@ gpu会保证运行同个kernel的SM都执行完毕之后，才会去执行运行
                 
                     <i class="material-icons sidebar-material-icons">inbox</i>
                 
-                    Archives
+                    Archive
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
