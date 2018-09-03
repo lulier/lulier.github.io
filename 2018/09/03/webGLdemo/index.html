@@ -235,28 +235,28 @@
 
 
     function handleKeys() {
-        if (currentlyPressedKeys['J']) {
-            // Page Up
+        if (currentlyPressedKeys[74]) {
+            // J
             z -= 0.05;
         }
-        if (currentlyPressedKeys['K']) {
-            // Page Down
+        if (currentlyPressedKeys[75]) {
+            // K
             z += 0.05;
         }
-        if (currentlyPressedKeys['A']) {
-            // Left cursor key
+        if (currentlyPressedKeys[65]) {
+            // A
             ySpeed -= 1;
         }
-        if (currentlyPressedKeys['D']) {
-            // Right cursor key
+        if (currentlyPressedKeys[68]) {
+            // D
             ySpeed += 1;
         }
-        if (currentlyPressedKeys['W']) {
-            // Up cursor key
+        if (currentlyPressedKeys[87]) {
+            // W
             xSpeed -= 1;
         }
-        if (currentlyPressedKeys['S']) {
-            // Down cursor key
+        if (currentlyPressedKeys[83]) {
+            // S
             xSpeed += 1;
         }
     }
@@ -931,7 +931,7 @@
 <blockquote>
 <p><img src="/images/9.png" alt=""></p>
 </blockquote>
-<h1 id="不带光照的webGL-demo"><a href="#不带光照的webGL-demo" class="headerlink" title="不带光照的webGL demo"></a>不带光照的webGL demo</h1><p>下面这个demo是经典的webGLdemo，实现了使用一张2d箱子贴图渲染的一个3d箱子，同时实现箱子的旋转和移动（键盘的上下左右控制旋转，pageup是沿Z轴负方向移动，pagedown是沿Z轴正方向移动）。不过这里改变的是箱子本身的旋转和坐标，摄像机的位置没有发生过变化。</p>
+<h1 id="不带光照的webGL-demo"><a href="#不带光照的webGL-demo" class="headerlink" title="不带光照的webGL demo"></a>不带光照的webGL demo</h1><p>下面这个demo是经典的webGLdemo，实现了使用一张2d箱子贴图渲染的一个3d箱子，同时实现箱子的旋转和移动（键盘的WSAD控制上下左右旋转，J是沿Z轴负方向移动，K是沿Z轴正方向移动）。不过这里改变的是箱子本身的旋转和坐标，摄像机的位置没有发生过变化。</p>
 <canvas id="lesson06-canvas" style="border: none;" width="500" height="500"></canvas>
 
         

@@ -220,31 +220,32 @@
 
 
     function handleKeys() {
-        if (currentlyPressedKeys[33]) {
-            // Page Up
+        if (currentlyPressedKeys[74]) {
+            // J
             z -= 0.05;
         }
-        if (currentlyPressedKeys[34]) {
-            // Page Down
+        if (currentlyPressedKeys[75]) {
+            // K
             z += 0.05;
         }
-        if (currentlyPressedKeys[37]) {
-            // Left cursor key
+        if (currentlyPressedKeys[65]) {
+            // A
             ySpeed -= 1;
         }
-        if (currentlyPressedKeys[39]) {
-            // Right cursor key
+        if (currentlyPressedKeys[68]) {
+            // D
             ySpeed += 1;
         }
-        if (currentlyPressedKeys[38]) {
-            // Up cursor key
+        if (currentlyPressedKeys[87]) {
+            // W
             xSpeed -= 1;
         }
-        if (currentlyPressedKeys[40]) {
-            // Down cursor key
+        if (currentlyPressedKeys[83]) {
+            // S
             xSpeed += 1;
         }
     }
+
 
 
     var cubeVertexPositionBuffer;
