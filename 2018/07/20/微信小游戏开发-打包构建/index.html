@@ -258,7 +258,7 @@
 
     
         <meta property="article:published_time" content="Fri Jul 20 2018 14:37:58 GMT+0800">
-        <meta property="article:modified_time" content="Mon Sep 10 2018 10:27:58 GMT+0800">
+        <meta property="article:modified_time" content="Mon Sep 10 2018 21:20:23 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -281,7 +281,7 @@
     "mainEntityOfPage": "http://lulier.github.io/2018/07/20/微信小游戏开发-打包构建/index.html",
     "headline": "微信小游戏开发-打包构建",
     "datePublished": "Fri Jul 20 2018 14:37:58 GMT+0800",
-    "dateModified": "Mon Sep 10 2018 10:27:58 GMT+0800",
+    "dateModified": "Mon Sep 10 2018 21:20:23 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -450,7 +450,7 @@
     
         <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发-打包构建&url=http://lulier.github.io/2018/07/20/微信小游戏开发-打包构建/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
-                Auf Weibo teilen
+                Compartir en Weibo
             </li>
         </a>
     
@@ -459,7 +459,7 @@
     
         <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发-打包构建&url=http://lulier.github.io/2018/07/20/微信小游戏开发-打包构建/index.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
-                Auf Twitter teilen
+                Compartir en Twitter
             </li>
         </a>
     
@@ -468,7 +468,7 @@
     
         <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/07/20/微信小游戏开发-打包构建/index.html" target="_blank">
             <li class="mdl-menu__item">
-                Auf Facebook teilen
+                Compartir en Facebook
             </li>
         </a>
     
@@ -477,7 +477,7 @@
     
         <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/07/20/微信小游戏开发-打包构建/index.html" target="_blank">
             <li class="mdl-menu__item">
-                Auf Google+ teilen
+                Compartir en Google+
             </li>
         </a>
     
@@ -505,11 +505,22 @@
 <h2 id="拷贝资源更新场景json文件和图片资源"><a href="#拷贝资源更新场景json文件和图片资源" class="headerlink" title="拷贝资源更新场景json文件和图片资源"></a>拷贝资源更新场景json文件和图片资源</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">echo 开始取文件</span><br><span class="line">rmdir /Q /S ..\BigTank2WXProj\res</span><br><span class="line">mkdir ..\BigTank2WXProj\res</span><br><span class="line"></span><br><span class="line">echo 删除project.js settings.js</span><br><span class="line">del ..\BigTank2WXProj\src\project.dev.js /Q</span><br><span class="line">del ..\BigTank2WXProj\src\project.js /Q</span><br><span class="line">del ..\BigTank2WXProj\src\settings.js /Q</span><br><span class="line"></span><br><span class="line">echo 拷贝project.js settings.js</span><br><span class="line">xcopy .\build\wechatgame\src\*.js ..\BigTank2WXProj\src\ /Y</span><br><span class="line">xcopy .\buildConfig\Version.js    ..\BigTank2WXProj\ /Y</span><br><span class="line">xcopy .\buildConfig\cdn_enable_true\gamesettingconfig.js ..\BigTank2WXProj\ /Y</span><br><span class="line"></span><br><span class="line">echo 启动场景json文件，可能会变化，请手动修改</span><br><span class="line">xcopy .\build\wechatgame\res\import\03\0356d831d.json ..\BigTank2WXProj\res\import\03\ /Y</span><br><span class="line"></span><br><span class="line">echo 拷贝启动场景资源</span><br><span class="line">xcopy .\build\wechatgame\res\raw-internal\image\*.* ..\BigTank2WXProj\res\raw-internal\image\ /Y /E</span><br><span class="line">xcopy .\build\wechatgame\res\raw-assets\Atlas\UI\ResUpdate\*.* ..\BigTank2WXProj\res\raw-assets\Atlas\UI\ResUpdate\ /Y /E </span><br><span class="line">xcopy .\build\wechatgame\res\raw-assets\Sound\studioBg.mp3 ..\BigTank2WXProj\res\raw-assets\Sound\ /Y</span><br></pre></td></tr></table></figure>
 <p>先是清理旧的资源，然后拷贝构建生成的project脚本(工程中所有脚本的合并结果)和setting文件(工程中所有资源的配置信息，如果是开放数据域工程，prefab信息也会被写进setting文件)，接着拷贝资源更新场景对应的json文件和所引用到资源。</p>
 <h2 id="拷贝资源进行打包"><a href="#拷贝资源进行打包" class="headerlink" title="拷贝资源进行打包"></a>拷贝资源进行打包</h2><p>打包的思路是使用7z将需要上传的资源文件打成一个或者多个压缩文件，最简单的方法是直接将资源目录原封不动的打包成压缩文件，游戏在下载之后直接解压到手机外存中就可以使用了。<br>但是这样做有两个缺点：</p>
-<p>1、游戏中存在大量的json文件（prefab等配置文件），如果在解压的时候对所有的json文件一一进行md5校验，会增加进入游戏的时间。<br>2、所有的资源文件都打到了一个资源包中，每次资源更新都将会是全量更新，而很多时候可能只是一张图片的更新。</p>
+<ul>
+<li>游戏中存在大量的json文件（prefab等配置文件），如果在解压的时候对所有的json文件一一进行md5校验，会增加进入游戏的时间。</li>
+<li>所有的资源文件都打到了一个资源包中，每次资源更新都将会是全量更新，而很多时候可能只是一张图片的更新。</li>
+</ul>
 <p>针对这两个问题，我们对打包流程做了优化：</p>
-<p>1、将项目中的所有json文件以key value的形式写到一个大的json文件中。<br>2、将项目的资源分成不同的模块，在游戏启动的时候只下载主模块的资源，其他模块的资源在进入相应模块的时候再下载。</p>
-<p>第一点主要是遍历资源目录下所有的json文件，把文件写到Merge.json中，其中key使用的是文件原本在资源目录下的相对路径。<br>第二点需要在项目中先做好目录的划分，</p>
-<p>如何分模块。</p>
+<ul>
+<li>将项目中的所有json文件以key value的形式写到一个大的json文件中。</li>
+<li>将项目的资源分成不同的模块，在游戏启动的时候只下载主模块的资源，其他模块的资源在进入相应模块的时候再下载。</li>
+</ul>
+<p>第一点主要是遍历资源目录下所有的json文件，把文件写到Merge.json中，其中key使用的是文件原本在资源目录下的相对路径。<br>第二点需要在项目中先做好目录的划分，如下图</p>
+<p><img src="/images/11.png" alt=""></p>
+<p>需要分模块下载的模块需要在resources/Modules目录下建立自己的目录。 默认一个目录就是一个模块，上图中Map01和Map02是两个不同的模块。 </p>
+<p>在工程中划分好目录之后，打包脚本会根据目录将目录打包成不同的压缩包，并在配置文件中写入文件版本号和md5等信息，下面是Map01的部分配置信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&quot;Modules&quot;: &#123;</span><br><span class="line">		&quot;Map01&quot;:&#123;</span><br><span class="line">			&quot;zipFiles&quot;:[</span><br><span class="line">				&#123;</span><br><span class="line">					&quot;digest&quot;:&quot;a1dcdc39f74a17da0394c089fc8521c4&quot;,</span><br><span class="line">					&quot;resFile&quot;:&quot;Map01_20180907230230.zip&quot;</span><br><span class="line">				&#125;</span><br><span class="line">			],</span><br><span class="line">			&quot;version&quot;:1,</span><br><span class="line">			&quot;resMd5s&quot;:[</span><br><span class="line">				&#123;</span><br><span class="line">					&quot;digest&quot;:&quot;d3154f2dd1efaa1c3cada2994863ad24&quot;,</span><br><span class="line">					&quot;resFile&quot;:&quot;res/raw-assets/resources/Modules/1003/Atlas/Building0.5.png&quot;</span><br><span class="line">				&#125;,</span><br><span class="line">				&#123;</span><br><span class="line">					&quot;digest&quot;:&quot;c9cc13410174e03ad078e3ef3f73ea44&quot;,</span><br><span class="line">					&quot;resFile&quot;:&quot;res/raw-assets/resources/Modules/1003/Atlas/BuildingTop0.5.png&quot;</span><br><span class="line">				&#125;,</span><br></pre></td></tr></table></figure>
+<p>游戏中我们使用ModuleMgr 模块负责模块的下载和更新，当调用downloadModule接口的时候 ModuleMgr会根据版本号检查目标模块是否需要更新，如果需要更新则下载替换，否则直接调用success回调。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ModuleMgr.downloadModule(&#123;</span><br><span class="line">            moduleName: <span class="string">'Map01'</span>,</span><br><span class="line">            onProcess: <span class="function"><span class="keyword">function</span>(<span class="params">process</span>) </span>&#123;</span><br><span class="line">                EventMgr.emit(<span class="built_in">window</span>.CustomEvents.ShowProgress, &#123; <span class="attr">progress</span>: THIS.percentageBase + process * THIS.percentage &#125;);</span><br><span class="line">            &#125;,</span><br><span class="line">            success: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">                THIS.ExcuteNext();</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">'===========&gt;UpdatingFile costTime:'</span> + (<span class="built_in">Date</span>.now() - startTime));</span><br><span class="line">            &#125;,</span><br><span class="line">            fail: <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">                <span class="built_in">console</span>.error(<span class="string">'更新失败！'</span>, error);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
 
         
     
@@ -564,7 +575,7 @@
                 <i class="material-icons">arrow_back</i>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Neuren
+            Más nuevo
         </a>
     
 
@@ -574,7 +585,7 @@
     <!-- Next Nav -->
     
         <a href="/2018/07/14/Buff/" id="post_nav-older" class="next-content">
-            Älteren
+            Mayor
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_forward</i>
@@ -647,7 +658,7 @@
                 
                     <i class="material-icons sidebar-material-icons">home</i>
                 
-                Home
+                Casa
             </a>
         </li>
         
@@ -660,7 +671,7 @@
                 
                     <i class="material-icons sidebar-material-icons">inbox</i>
                 
-                    Archive
+                    Archivo
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
@@ -702,7 +713,7 @@ It will not impact the appearance and can give developers a lot of support :)
 
     <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
         <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
-            Theme - Material
+            tema - Material
             <span class="sidebar-badge badge-circle">i</span>
         </div>
     </a>

@@ -258,7 +258,7 @@
 
     
         <meta property="article:published_time" content="Fri Aug 10 2018 14:48:52 GMT+0800">
-        <meta property="article:modified_time" content="Mon Sep 10 2018 10:29:08 GMT+0800">
+        <meta property="article:modified_time" content="Mon Sep 10 2018 23:07:56 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -281,7 +281,7 @@
     "mainEntityOfPage": "http://lulier.github.io/2018/08/10/微信小游戏开发-开放数据域/index.html",
     "headline": "微信小游戏开发-开放数据域",
     "datePublished": "Fri Aug 10 2018 14:48:52 GMT+0800",
-    "dateModified": "Mon Sep 10 2018 10:29:08 GMT+0800",
+    "dateModified": "Mon Sep 10 2018 23:07:56 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -365,7 +365,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#开放数据域"><span class="post-toc-number">1.</span> <span class="post-toc-text">开放数据域</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#子域包体过大"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">子域包体过大</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安卓子域模糊问题"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">安卓子域模糊问题</span></a></li></ol></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#开放数据域"><span class="post-toc-number">1.</span> <span class="post-toc-text">开放数据域</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#子域渲染原理"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">子域渲染原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#子域包体过大"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">子域包体过大</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#安卓子域模糊问题"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">安卓子域模糊问题</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#子域渲染循环"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">子域渲染循环</span></a></li></ol></li></ol>
     </ul>
     
 
@@ -450,7 +450,7 @@
     
         <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发-开放数据域&url=http://lulier.github.io/2018/08/10/微信小游戏开发-开放数据域/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
-                Auf Weibo teilen
+                Compartir en Weibo
             </li>
         </a>
     
@@ -459,7 +459,7 @@
     
         <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发-开放数据域&url=http://lulier.github.io/2018/08/10/微信小游戏开发-开放数据域/index.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
-                Auf Twitter teilen
+                Compartir en Twitter
             </li>
         </a>
     
@@ -468,7 +468,7 @@
     
         <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/08/10/微信小游戏开发-开放数据域/index.html" target="_blank">
             <li class="mdl-menu__item">
-                Auf Facebook teilen
+                Compartir en Facebook
             </li>
         </a>
     
@@ -477,7 +477,7 @@
     
         <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/08/10/微信小游戏开发-开放数据域/index.html" target="_blank">
             <li class="mdl-menu__item">
-                Auf Google+ teilen
+                Compartir en Google+
             </li>
         </a>
     
@@ -500,9 +500,32 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <h1 id="开放数据域"><a href="#开放数据域" class="headerlink" title="开放数据域"></a>开放数据域</h1><p>微信的开放数据域是一个封闭的，独立的javascript作用域。在开放数据域中可以获取到用户的关系链数据，用来制作好友排行榜等功能。<br>为了防止用户的关系链数据被窃取，除了将开放数据域独立出来，游戏主域中的许多wx接口在开放数据域中也是被屏蔽掉的，例如文件下载，文件写入等接口。这就给开发者开发带来了些困难，无法像开发游戏主域功能那样开发开放数据域的功能。<br>cocos creator从1.9版本之后支持将子域作为一个独立的工程进行开发，相对比最初子域工程需要裸写UI界面的代码，这大大的节省了开发者进行子域界面排版布局和调整屏幕适配的工作量。<br>不过cocos这个方案也有问题，下面是这个方案两个主要的问题。</p>
+        <h1 id="开放数据域"><a href="#开放数据域" class="headerlink" title="开放数据域"></a>开放数据域</h1><p>微信的开放数据域是一个封闭的，独立的javascript作用域，也称为子域。在开放数据域中可以获取到用户的关系链数据，用来制作好友排行榜等功能。<br>为了防止用户的关系链数据被窃取，除了将开放数据域独立出来，游戏主域中的许多wx接口在开放数据域中也是被屏蔽掉的，例如文件下载，文件写入等接口。这就给开发者开发带来了些困难，无法像开发游戏主域功能那样开发开放数据域的功能。<br>cocos creator从1.9版本之后支持将子域作为一个独立的工程进行开发，相对比最初子域工程需要裸写UI界面的代码，这大大的节省了开发者进行子域界面排版布局和调整屏幕适配的工作量。</p>
+<h2 id="子域渲染原理"><a href="#子域渲染原理" class="headerlink" title="子域渲染原理"></a>子域渲染原理</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">_updaetSubDomainCanvas() &#123;</span><br><span class="line">       <span class="keyword">if</span> (!<span class="built_in">window</span>.GameSettingConfig) &#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">"没有游戏设置"</span>);</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">if</span> (!<span class="keyword">this</span>._tex) &#123;</span><br><span class="line">           <span class="built_in">console</span>.log(<span class="string">"没有tex"</span>);</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">var</span> openDataContext = wx.getOpenDataContext();</span><br><span class="line">       <span class="keyword">var</span> sharedCanvas = openDataContext.canvas;</span><br><span class="line">       <span class="keyword">this</span>._tex.initWithElement(sharedCanvas);</span><br><span class="line">       <span class="keyword">this</span>._tex.handleLoadedTexture();</span><br><span class="line">       <span class="keyword">this</span>.subContext.spriteFrame = <span class="keyword">new</span> cc.SpriteFrame(<span class="keyword">this</span>._tex);</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<p>代码其实并不复杂，子域其实是渲染在一块离屏的canvas上，在主域通过wx.getOpenDataContext获取到canvas，然后将这块canvas渲染到纹理_tex上，再将得到的纹理赋给sprite在主域中渲染。（原理在 webGL渲染到纹理 中有介绍）</p>
+<p>不过cocos这个方案也有问题，下面是这个方案三个主要的问题。</p>
 <h2 id="子域包体过大"><a href="#子域包体过大" class="headerlink" title="子域包体过大"></a>子域包体过大</h2><p>将子域作为独立的cocos工程来开发，不可避免的引入了cocos引擎文件和微信的适配接口库，这使得在不算资源文件的情况下，子域的包体已经接近1M。<br>因为小游戏主包的最大限制是4M，所以子域的资源文件必须像主域一样通过下载存放在手机外存中，然后通过修改加载路径读取外存中的资源文件。<br>在前面已经说过，微信屏蔽了子域的下载接口，所以子域的资源文件只能由主域下载。</p>
-<h2 id="安卓子域模糊问题"><a href="#安卓子域模糊问题" class="headerlink" title="安卓子域模糊问题"></a>安卓子域模糊问题</h2>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">bootSubContext: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">       <span class="keyword">if</span> (PlatformUtil.IsWeichatGame()) &#123;</span><br><span class="line">           <span class="keyword">let</span> openid = <span class="built_in">window</span>.WeChatMgr.getOpenId();</span><br><span class="line">           wx.postMessage(&#123;</span><br><span class="line">               message: <span class="string">'bootSubContext'</span>,</span><br><span class="line">               localResPath: <span class="built_in">window</span>.GameSettingConfig.BIG_TANK_RES_PATH,</span><br><span class="line">               openid: openid,</span><br><span class="line">           &#125;);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<p>在游戏启动的时候，我们读取配置中的手机外存地址，将地址通过postMessage发送给子域。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">wx.onMessage(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">if</span>(data.message === <span class="string">'bootSubContext'</span>)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="built_in">window</span>.localResPath = data.localResPath;</span><br><span class="line">              _this._openid = data.openid;</span><br><span class="line">              _this.boot();</span><br><span class="line">          &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>子域在收到外存地址之后保存在window.localResPath中，接着我们修改子域中的文件读取</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (isSubdomain) &#123;</span><br><span class="line">       <span class="keyword">if</span> (REGEX.test(item.url)) &#123;</span><br><span class="line">           callback(<span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line">	</span><br><span class="line">       <span class="keyword">if</span>(<span class="built_in">window</span>.localResPath)</span><br><span class="line">       &#123;</span><br><span class="line">         <span class="keyword">this</span>.SUBCONTEXT_ROOT = <span class="built_in">window</span>.localResPath;<span class="comment">//修改文件路径</span></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       item.url = <span class="keyword">this</span>.SUBCONTEXT_ROOT + item.url;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (item.type &amp;&amp; non_text_format.indexOf(item.type) !== <span class="number">-1</span>) &#123;</span><br><span class="line">           nextPipe(item, callback);</span><br><span class="line">           <span class="keyword">return</span>;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>我们修改子域读取资源的路径，将路径指向手机外存地址，而资源已经通过主域的下载模块下载解压在了相应的地址下。</p>
+<h2 id="安卓子域模糊问题"><a href="#安卓子域模糊问题" class="headerlink" title="安卓子域模糊问题"></a>安卓子域模糊问题</h2><p>由于cocos实现的bug，子域模块在安卓上会变的模糊。</p>
+<p>正常的排行榜：</p>
+<p><img src="/images/14.jpg" alt=""></p>
+<p>模糊的排行榜：</p>
+<p><img src="/images/13.jpg" alt=""></p>
+<p>通过调试我们发现，模糊的原因是在安卓上，子域的canvas尺寸与主域的canvas尺寸不同，导致子域的canvas在渲染到主域的时候被拉伸了。<br>于是，我们在开始渲染子域之前修改了子域canvas的尺寸，将其修改为将要渲染的sprite的尺寸。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//只处理安卓平台</span></span><br><span class="line"><span class="keyword">if</span> (PlatformUtil.isTargetPlatform(PlatformUtil.PLATFORM.ANDROID)) &#123;</span><br><span class="line">           <span class="keyword">var</span> openDataContext = wx.getOpenDataContext();</span><br><span class="line">           openDataContext.canvas.width = <span class="keyword">this</span>.subContext.node.width;</span><br><span class="line">           openDataContext.canvas.height = <span class="keyword">this</span>.subContext.node.height;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+<p>解决了模糊问题之后，我们发现列表的滑动出了问题，变得不正常。分析发现，是触摸的坐标转换出了问题，在子域中修改触摸坐标转换</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> _devicePixelRatio = <span class="built_in">Math</span>.min(<span class="number">2</span>, <span class="built_in">window</span>.devicePixelRatio || <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">cc.view.convertToLocationInView = <span class="function"><span class="keyword">function</span> (<span class="params">tx, ty, relatedPos, out</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = out || cc.v2();</span><br><span class="line">  <span class="keyword">let</span> x = _devicePixelRatio * (tx - relatedPos.left);</span><br><span class="line">  <span class="keyword">let</span> y = _devicePixelRatio * (relatedPos.top + relatedPos.height - ty);</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>._isRotated) &#123;</span><br><span class="line">    result.x = <span class="keyword">this</span>._viewportRect.width - y;</span><br><span class="line">    result.y = x;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    result.x = x;</span><br><span class="line">    result.y = y;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>主要的修改是在原来的基础上乘上_devicePixelRatio，因为我们在前面仅仅修改的是canvas的尺寸，逻辑上的子域依然跟主域的尺寸不一样。</p>
+<p>至于_devicePixelRatio的取值，我是参考cocos2.0版本的取值（2.0修复了子域模糊的问题）。我的猜测是cocos 1.9在安卓上错误的使用了屏幕的物理分辨率作为子域canvas的尺寸，所以主域和子域的尺寸刚好差了_devicePixelRatio倍。</p>
+<h2 id="子域渲染循环"><a href="#子域渲染循环" class="headerlink" title="子域渲染循环"></a>子域渲染循环</h2><p>子域的渲染循环在游戏的过程中会一直存在，但是我们目前只是在战场外的排行榜中使用到子域的功能，战场中并没有子域的相关功能，所以我们需要在进入战场的时候停掉子域的渲染循环，然后在战斗结束之后打开。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">_SetEnableSubContext: <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (PlatformUtil.IsWeichatGame()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (value) &#123;</span><br><span class="line">                wx.postMessage(&#123; <span class="attr">message</span>: <span class="string">'startMainLoop'</span> &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                wx.postMessage(&#123; <span class="attr">message</span>: <span class="string">'pauseMainLoop'</span> &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>我们通过_SetEnableSubContext给子域发送消息，子域中通过startMainLoop和pauseMainLoop控制渲染循环。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//重启mainloop</span></span><br><span class="line">startMainLoop: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       cc.game.resume();</span><br><span class="line">   &#125;,</span><br><span class="line">   </span><br><span class="line">   <span class="comment">//停止mainloop</span></span><br><span class="line">   pauseMainLoop: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">   </span>&#123;</span><br><span class="line">       cc.game.pause();</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
         
     
 
@@ -556,7 +579,7 @@
                 <i class="material-icons">arrow_back</i>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            Neuren
+            Más nuevo
         </a>
     
 
@@ -566,7 +589,7 @@
     <!-- Next Nav -->
     
         <a href="/2018/08/04/微信小游戏开发-动态滑动列表/" id="post_nav-older" class="next-content">
-            Älteren
+            Mayor
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_forward</i>
@@ -639,7 +662,7 @@
                 
                     <i class="material-icons sidebar-material-icons">home</i>
                 
-                Home
+                Casa
             </a>
         </li>
         
@@ -652,7 +675,7 @@
                 
                     <i class="material-icons sidebar-material-icons">inbox</i>
                 
-                    Archive
+                    Archivo
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
@@ -694,7 +717,7 @@ It will not impact the appearance and can give developers a lot of support :)
 
     <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
         <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
-            Theme - Material
+            tema - Material
             <span class="sidebar-badge badge-circle">i</span>
         </div>
     </a>
