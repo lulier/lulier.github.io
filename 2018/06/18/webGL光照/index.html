@@ -606,7 +606,7 @@
         
         pMatrix = okMat4Proj(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
 
-        var specularHighlights = document.getElementById("specular").checked;
+        // var specularHighlights = document.getElementById("specular").checked;
         gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, 1);
 
         var lighting = document.getElementById("lighting").checked;
