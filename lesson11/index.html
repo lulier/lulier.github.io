@@ -212,12 +212,20 @@
     var lastMouseX = null;
     var lastMouseY = null;
 
+    var orgMouseX = null;
+    var orgMouseY = null;
+
     var moonRotationMatrix = new okMat4();
 
     function handleMouseDown(event) {
         mouseDown = true;
         lastMouseX = event.clientX;
         lastMouseY = event.clientY;
+        if(!orgMouseX)
+        {
+            orgMouseX = lastMouseX;
+            orgMouseY = lastMouseY;
+        }
     }
 
 

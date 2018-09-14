@@ -17,426 +17,6 @@
             '1.5.0'
         ]
     </script>
-    <script type="text/javascript" src="Oak3D_v_0_5.js"></script>
-
-    <script id="shader-fs" type="x-shader/x-fragment">
-    
-        precision mediump float;
-    
-    
-        varying vec2 vTextureCoord;
-    
-        uniform sampler2D uSampler;
-    
-        void main(void) {
-            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-        }
-    </script>
-    
-    <script id="shader-vs" type="x-shader/x-vertex">
-        attribute vec3 aVertexPosition;
-        attribute vec2 aTextureCoord;
-    
-        uniform mat4 uMVMatrix;
-        uniform mat4 uPMatrix;
-    
-        varying vec2 vTextureCoord;
-    
-    
-        void main(void) {
-            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-            vTextureCoord = aTextureCoord;
-        }
-    </script>
-    
-    
-    <script type="text/javascript">
-    
-        var gl;
-    
-        function initGL(canvas) {
-            try {
-                gl = canvas.getContext("experimental-webgl");
-                gl.viewportWidth = canvas.width;
-                gl.viewportHeight = canvas.height;
-            } catch (e) {
-            }
-            if (!gl) {
-                alert("Could not initialise WebGL, sorry :-(");
-            }
-        }
-    
-    
-        function getShader(gl, id) {
-            var shaderScript = document.getElementById(id);
-            if (!shaderScript) {
-                return null;
-            }
-    
-            var str = "";
-            var k = shaderScript.firstChild;
-            while (k) {
-                if (k.nodeType == 3) {
-                    str += k.textContent;
-                }
-                k = k.nextSibling;
-            }
-    
-            var shader;
-            if (shaderScript.type == "x-shader/x-fragment") {
-                shader = gl.createShader(gl.FRAGMENT_SHADER);
-            } else if (shaderScript.type == "x-shader/x-vertex") {
-                shader = gl.createShader(gl.VERTEX_SHADER);
-            } else {
-                return null;
-            }
-    
-            gl.shaderSource(shader, str);
-            gl.compileShader(shader);
-    
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                alert(gl.getShaderInfoLog(shader));
-                return null;
-            }
-    
-            return shader;
-        }
-    
-    
-        var shaderProgram;
-    
-        function initShaders() {
-            var fragmentShader = getShader(gl, "shader-fs");
-            var vertexShader = getShader(gl, "shader-vs");
-    
-            shaderProgram = gl.createProgram();
-            gl.attachShader(shaderProgram, vertexShader);
-            gl.attachShader(shaderProgram, fragmentShader);
-            gl.linkProgram(shaderProgram);
-    
-            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                alert("Could not initialise shaders");
-            }
-    
-            gl.useProgram(shaderProgram);
-    
-            shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-            gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-    
-            shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
-            gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
-    
-            shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-            shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
-            shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-        }
-    
-    
-        function handleLoadedTexture(textures) {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    
-            gl.bindTexture(gl.TEXTURE_2D, textures[0]);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[0].image);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    
-            gl.bindTexture(gl.TEXTURE_2D, textures[1]);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[1].image);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    
-            gl.bindTexture(gl.TEXTURE_2D, textures[2]);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textures[2].image);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-            gl.generateMipmap(gl.TEXTURE_2D);
-    
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
-    
-    
-        var crateTextures = Array();
-    
-        function initTexture() {
-            var crateImage = new Image();
-    
-            for (var i=0; i < 3; i++) {
-                var texture = gl.createTexture();
-                texture.image = crateImage;
-                crateTextures.push(texture);
-            }
-    
-            crateImage.onload = function () {
-                handleLoadedTexture(crateTextures)
-            }
-            crateImage.src = "crate.gif";
-        }
-    
-    
-        var mvMatrix ;
-        var mvMatrixStack = [];
-        var pMatrix ;
-    
-    
-        function mvPushMatrix() {
-            var copy = new okMat4();
-            mvMatrix.clone(copy);
-            mvMatrixStack.push(copy);
-        }
-    
-        function mvPopMatrix() {
-            if (mvMatrixStack.length == 0) {
-                throw "Invalid popMatrix!";
-            }
-            mvMatrix = mvMatrixStack.pop();
-        }
-    
-    
-        function setMatrixUniforms() {
-            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix.toArray());
-            gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix.toArray());
-        }
-    
-    
-        
-        
-        
-        
-    
-    
-        var xRot = 0;
-        var xSpeed = 0;
-    
-        var yRot = 0;
-        var ySpeed = 0;
-    
-        var z = -5.0;
-    
-        var filter = 0;
-    
-    
-        var currentlyPressedKeys = {};
-    
-        function handleKeyDown(event) {
-            currentlyPressedKeys[event.keyCode] = true;
-    
-            if (String.fromCharCode(event.keyCode) == "F") {
-                filter += 1;
-                if (filter == 3) {
-                    filter = 0;
-                }
-            }
-        }
-    
-    
-        function handleKeyUp(event) {
-            currentlyPressedKeys[event.keyCode] = false;
-        }
-    
-    
-        function handleKeys() {
-            if (currentlyPressedKeys[74]) {
-                // J
-                z -= 0.05;
-            }
-            if (currentlyPressedKeys[75]) {
-                // K
-                z += 0.05;
-            }
-            if (currentlyPressedKeys[65]) {
-                // A
-                ySpeed -= 1;
-            }
-            if (currentlyPressedKeys[68]) {
-                // D
-                ySpeed += 1;
-            }
-            if (currentlyPressedKeys[87]) {
-                // W
-                xSpeed -= 1;
-            }
-            if (currentlyPressedKeys[83]) {
-                // S
-                xSpeed += 1;
-            }
-        }
-    
-    
-        var cubeVertexPositionBuffer;
-        var cubeVertexTextureCoordBuffer;
-        var cubeVertexIndexBuffer;
-        function initBuffers() {
-            cubeVertexPositionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-            vertices = [
-                // Front face
-                -1.0, -1.0,  1.0,
-                 1.0, -1.0,  1.0,
-                 1.0,  1.0,  1.0,
-                -1.0,  1.0,  1.0,
-    
-                // Back face
-                -1.0, -1.0, -1.0,
-                -1.0,  1.0, -1.0,
-                 1.0,  1.0, -1.0,
-                 1.0, -1.0, -1.0,
-    
-                // Top face
-                -1.0,  1.0, -1.0,
-                -1.0,  1.0,  1.0,
-                 1.0,  1.0,  1.0,
-                 1.0,  1.0, -1.0,
-    
-                // Bottom face
-                -1.0, -1.0, -1.0,
-                 1.0, -1.0, -1.0,
-                 1.0, -1.0,  1.0,
-                -1.0, -1.0,  1.0,
-    
-                // Right face
-                 1.0, -1.0, -1.0,
-                 1.0,  1.0, -1.0,
-                 1.0,  1.0,  1.0,
-                 1.0, -1.0,  1.0,
-    
-                // Left face
-                -1.0, -1.0, -1.0,
-                -1.0, -1.0,  1.0,
-                -1.0,  1.0,  1.0,
-                -1.0,  1.0, -1.0,
-            ];
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-            cubeVertexPositionBuffer.itemSize = 3;
-            cubeVertexPositionBuffer.numItems = 24;
-    
-            cubeVertexTextureCoordBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-            var textureCoords = [
-                // Front face
-                0.0, 0.0,
-                1.0, 0.0,
-                1.0, 1.0,
-                0.0, 1.0,
-    
-                // Back face
-                1.0, 0.0,
-                1.0, 1.0,
-                0.0, 1.0,
-                0.0, 0.0,
-    
-                // Top face
-                0.0, 1.0,
-                0.0, 0.0,
-                1.0, 0.0,
-                1.0, 1.0,
-    
-                // Bottom face
-                1.0, 1.0,
-                0.0, 1.0,
-                0.0, 0.0,
-                1.0, 0.0,
-    
-                // Right face
-                1.0, 0.0,
-                1.0, 1.0,
-                0.0, 1.0,
-                0.0, 0.0,
-    
-                // Left face
-                0.0, 0.0,
-                1.0, 0.0,
-                1.0, 1.0,
-                0.0, 1.0,
-            ];
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
-            cubeVertexTextureCoordBuffer.itemSize = 2;
-            cubeVertexTextureCoordBuffer.numItems = 24;
-    
-            cubeVertexIndexBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-            var cubeVertexIndices = [
-                0, 1, 2,      0, 2, 3,    // Front face
-                4, 5, 6,      4, 6, 7,    // Back face
-                8, 9, 10,     8, 10, 11,  // Top face
-                12, 13, 14,   12, 14, 15, // Bottom face
-                16, 17, 18,   16, 18, 19, // Right face
-                20, 21, 22,   20, 22, 23  // Left face
-            ]
-            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
-            cubeVertexIndexBuffer.itemSize = 1;
-            cubeVertexIndexBuffer.numItems = 36;
-        }
-    
-    
-        function drawScene() {
-            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    
-            pMatrix = okMat4Proj(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
-    
-            mvMatrix = okMat4Trans(0.0, 0.0, z); 
-    
-            mvMatrix.rotX(OAK.SPACE_LOCAL, xRot, true);
-            mvMatrix.rotY(OAK.SPACE_LOCAL, yRot, true);
-           
-    
-            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-    
-            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
-            gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
-    
-    
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, crateTextures[filter]);
-            gl.uniform1i(shaderProgram.samplerUniform, 0);
-    
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-            setMatrixUniforms();
-            gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-        }
-    
-    
-        var lastTime = 0;
-    
-        function animate() {
-            var timeNow = new Date().getTime();
-            if (lastTime != 0) {
-                var elapsed = timeNow - lastTime;
-    
-                xRot += (xSpeed * elapsed) / 1000.0;
-                yRot += (ySpeed * elapsed) / 1000.0;
-            }
-            lastTime = timeNow;
-        }
-    
-    
-        function tick() {
-            okRequestAnimationFrame(tick);
-            handleKeys();
-            drawScene();
-            animate();
-        }
-    
-    
-    
-        function webGLStart() {
-            var canvas = document.getElementById("canvas");
-            initGL(canvas);
-            initShaders();
-            initBuffers();
-            initTexture();
-    
-            gl.clearColor(0.0, 0.0, 0.0, 1.0);
-            gl.enable(gl.DEPTH_TEST);
-    
-            document.onkeydown = handleKeyDown;
-            document.onkeyup = handleKeyUp;
-    
-            tick();
-        }
-    
-    </script>
 
     <!-- dns prefetch -->
     <meta http-equiv="x-dns-prefetch-control" content="on">
@@ -678,7 +258,7 @@
 
     
         <meta property="article:published_time" content="Sun Jun 03 2018 15:35:15 GMT+0800">
-        <meta property="article:modified_time" content="Tue Sep 11 2018 12:50:34 GMT+0800">
+        <meta property="article:modified_time" content="Tue Sep 11 2018 13:38:33 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -701,7 +281,7 @@
     "mainEntityOfPage": "http://lulier.github.io/2018/06/03/webGLdemo/index.html",
     "headline": "webGL编程",
     "datePublished": "Sun Jun 03 2018 15:35:15 GMT+0800",
-    "dateModified": "Tue Sep 11 2018 12:50:34 GMT+0800",
+    "dateModified": "Tue Sep 11 2018 13:38:33 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -739,7 +319,7 @@
 
 
     
-        <body id="scheme-Paradox" class="lazy" onload="webGLStart();">
+        <body id="scheme-Paradox" class="lazy">
             <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
                 
 
@@ -927,12 +507,8 @@
 <p>从定义中可以看出，webGL就是给openGL ES套上了一层JavaScript的API，由于之前看过OpenGL编程，加上最近的项目都是JavaScript开发，看webGL也是较快就上手。 </p>
 <h1 id="webGL编程"><a href="#webGL编程" class="headerlink" title="webGL编程"></a>webGL编程</h1><p>webGL编程流程跟openGL是一样的，首先是顶点数据和顶点坐标的准备，如果使用贴图的话，还需要有贴图uv坐标。顶点数据准备好了，接下来是编译shader代码和加载贴图资源。</p>
 <p>在所有数据都准备好了之后，程序就可以开始渲染的主循环，渲染的主循环主要是在每一帧里，将前面准备好的数据填充到shader程序对应的变量上，实际上就是调用openGL接口，将数据推送到GPU内存。之前看过一些CUDA编程，这里的uniform变量对应的应该是global memory（如果使用的是英伟达显卡的话）。最后调用渲染接口，webGL负责在帧缓冲中将顶点的颜色值填好。</p>
-<p>下面这个流程图描述了webGL渲染管线的工作流程：</p>
-<blockquote>
-<p><img src="/images/9.png" alt=""></p>
-</blockquote>
+<p>下面这个流程图描述了webGL渲染管线的工作流程：<br><img src="/images/9.png" alt=""></p>
 <h1 id="不带光照的webGL-demo"><a href="#不带光照的webGL-demo" class="headerlink" title="不带光照的webGL demo"></a>不带光照的webGL demo</h1><p>下面这个demo是经典的webGLdemo，实现了使用一张2d箱子贴图渲染的一个3d箱子，同时实现箱子的旋转和移动（键盘的上下左右控制旋转，pageup是沿Z轴负方向移动，pagedown是沿Z轴正方向移动）。不过这里改变的是箱子本身的旋转和坐标，摄像机的位置没有发生过变化。</p>
-<canvas id="canvas" style="border: none;" width="500" height="500"></canvas>
 <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><h2 id="渲染数据准备"><a href="#渲染数据准备" class="headerlink" title="渲染数据准备"></a>渲染数据准备</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initBuffers</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//顶点缓冲</span></span><br><span class="line">       cubeVertexPositionBuffer = gl.createBuffer();</span><br><span class="line">	<span class="comment">//绑定为当前的数组缓冲</span></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);</span><br><span class="line">       vertices = [</span><br><span class="line">           <span class="comment">// 立方体前面</span></span><br><span class="line">           <span class="number">-1.0</span>, <span class="number">-1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>, <span class="number">-1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>,  <span class="number">1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>,  <span class="number">1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体背面</span></span><br><span class="line">           <span class="number">-1.0</span>, <span class="number">-1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>,  <span class="number">1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>,  <span class="number">1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>, <span class="number">-1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体顶部</span></span><br><span class="line">           <span class="number">-1.0</span>,  <span class="number">1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>,  <span class="number">1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>,  <span class="number">1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>,  <span class="number">1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体底部</span></span><br><span class="line">           <span class="number">-1.0</span>, <span class="number">-1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>, <span class="number">-1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>, <span class="number">-1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>, <span class="number">-1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体右边</span></span><br><span class="line">            <span class="number">1.0</span>, <span class="number">-1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>,  <span class="number">1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>,  <span class="number">1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">            <span class="number">1.0</span>, <span class="number">-1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体左边</span></span><br><span class="line">           <span class="number">-1.0</span>, <span class="number">-1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>, <span class="number">-1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>,  <span class="number">1.0</span>,  <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">-1.0</span>,  <span class="number">1.0</span>, <span class="number">-1.0</span>,</span><br><span class="line">       ];</span><br><span class="line">	<span class="comment">//将数据写入顶点缓冲中</span></span><br><span class="line">       gl.bufferData(gl.ARRAY_BUFFER, <span class="keyword">new</span> <span class="built_in">Float32Array</span>(vertices), gl.STATIC_DRAW);</span><br><span class="line">       <span class="comment">//添加属性itemSize，numItems后面使用</span></span><br><span class="line">       cubeVertexPositionBuffer.itemSize = <span class="number">3</span>;</span><br><span class="line">       cubeVertexPositionBuffer.numItems = <span class="number">24</span>;</span><br><span class="line">	<span class="comment">//纹理坐标缓冲</span></span><br><span class="line">       cubeVertexTextureCoordBuffer = gl.createBuffer();</span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);</span><br><span class="line">       <span class="keyword">var</span> textureCoords = [</span><br><span class="line">           <span class="comment">// 立方体前面</span></span><br><span class="line">           <span class="number">0.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体背面</span></span><br><span class="line">           <span class="number">1.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">0.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体顶部</span></span><br><span class="line">           <span class="number">0.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">1.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体底部</span></span><br><span class="line">           <span class="number">1.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">0.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体右边</span></span><br><span class="line">           <span class="number">1.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">0.0</span>,</span><br><span class="line"></span><br><span class="line">           <span class="comment">// 立方体左边</span></span><br><span class="line">           <span class="number">0.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">0.0</span>,</span><br><span class="line">           <span class="number">1.0</span>, <span class="number">1.0</span>,</span><br><span class="line">           <span class="number">0.0</span>, <span class="number">1.0</span>,</span><br><span class="line">       ];</span><br><span class="line">       gl.bufferData(gl.ARRAY_BUFFER, <span class="keyword">new</span> <span class="built_in">Float32Array</span>(textureCoords), gl.STATIC_DRAW);</span><br><span class="line">       cubeVertexTextureCoordBuffer.itemSize = <span class="number">2</span>;</span><br><span class="line">       cubeVertexTextureCoordBuffer.numItems = <span class="number">24</span>;</span><br><span class="line">	<span class="comment">//顶点索引缓冲</span></span><br><span class="line">       cubeVertexIndexBuffer = gl.createBuffer();</span><br><span class="line">       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);</span><br><span class="line">       <span class="keyword">var</span> cubeVertexIndices = [</span><br><span class="line">           <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>,      <span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>,    <span class="comment">// 立方体前面</span></span><br><span class="line">           <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>,      <span class="number">4</span>, <span class="number">6</span>, <span class="number">7</span>,    <span class="comment">// 立方体背面</span></span><br><span class="line">           <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>,     <span class="number">8</span>, <span class="number">10</span>, <span class="number">11</span>,  <span class="comment">// 立方体顶部</span></span><br><span class="line">           <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>,   <span class="number">12</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="comment">// 立方体底部</span></span><br><span class="line">           <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>,   <span class="number">16</span>, <span class="number">18</span>, <span class="number">19</span>, <span class="comment">// 立方体右边</span></span><br><span class="line">           <span class="number">20</span>, <span class="number">21</span>, <span class="number">22</span>,   <span class="number">20</span>, <span class="number">22</span>, <span class="number">23</span>  <span class="comment">// 立方体左边</span></span><br><span class="line">       ]</span><br><span class="line">       gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, <span class="keyword">new</span> <span class="built_in">Uint16Array</span>(cubeVertexIndices), gl.STATIC_DRAW);</span><br><span class="line">       cubeVertexIndexBuffer.itemSize = <span class="number">1</span>;</span><br><span class="line">       cubeVertexIndexBuffer.numItems = <span class="number">36</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="keyword">var</span> texture;</span><br><span class="line"><span class="comment">//加载贴图</span></span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">initTexture</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">       <span class="keyword">var</span> crateImage = <span class="keyword">new</span> Image();</span><br><span class="line"></span><br><span class="line">       texture = gl.createTexture()；</span><br><span class="line">       texture.image = crateImage;</span><br><span class="line">       </span><br><span class="line">	</span><br><span class="line">       crateImage.onload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">           handleLoadedTexture(texture);</span><br><span class="line">       &#125;</span><br><span class="line">       crateImage.src = <span class="string">"crate.gif"</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleLoadedTexture</span>(<span class="params">texture</span>) </span>&#123;</span><br><span class="line">	<span class="comment">//翻转y轴</span></span><br><span class="line">       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">       gl.bindTexture(gl.TEXTURE_2D, texture);</span><br><span class="line">       gl.texImage2D(gl.TEXTURE_2D, <span class="number">0</span>, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);</span><br><span class="line">	<span class="comment">//设置放大使用线性插值</span></span><br><span class="line">       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);</span><br><span class="line">	<span class="comment">//设置缩小使用多级渐远</span></span><br><span class="line">       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);</span><br><span class="line">	<span class="comment">//生成mipmap</span></span><br><span class="line">       gl.generateMipmap(gl.TEXTURE_2D);</span><br><span class="line"></span><br><span class="line">       gl.bindTexture(gl.TEXTURE_2D, <span class="literal">null</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="渲染主循环"><a href="#渲染主循环" class="headerlink" title="渲染主循环"></a>渲染主循环</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">drawScene</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//设置视图大小</span></span><br><span class="line">       gl.viewport(<span class="number">0</span>, <span class="number">0</span>, gl.viewportWidth, gl.viewportHeight);</span><br><span class="line">	<span class="comment">//清空上一帧的缓冲</span></span><br><span class="line">       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);</span><br><span class="line">	<span class="comment">//设置观察矩阵</span></span><br><span class="line">       pMatrix = okMat4Proj(<span class="number">45</span>, gl.viewportWidth / gl.viewportHeight, <span class="number">0.1</span>, <span class="number">100.0</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//移动箱子位置，z坐标根据用户输入变化</span></span><br><span class="line">       mvMatrix = okMat4Trans(<span class="number">0.0</span>, <span class="number">0.0</span>, z); </span><br><span class="line">	<span class="comment">//设置箱子旋转，xRot和yRot根据用户输入变化</span></span><br><span class="line">       mvMatrix.rotX(OAK.SPACE_LOCAL, xRot, <span class="literal">true</span>);</span><br><span class="line">       mvMatrix.rotY(OAK.SPACE_LOCAL, yRot, <span class="literal">true</span>);</span><br><span class="line">      </span><br><span class="line">	<span class="comment">//将顶点缓冲传到GPU中</span></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//将纹理缓冲传到GPU中</span></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//激活纹理</span></span><br><span class="line">       gl.activeTexture(gl.TEXTURE0);</span><br><span class="line">       gl.bindTexture(gl.TEXTURE_2D, texture);</span><br><span class="line">       gl.uniform1i(shaderProgram.samplerUniform, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);</span><br><span class="line">	<span class="comment">//设置矩阵</span></span><br><span class="line">       gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, <span class="literal">false</span>, pMatrix.toArray());</span><br><span class="line">       gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, <span class="literal">false</span>, mvMatrix.toArray());</span><br><span class="line">	<span class="comment">//最后调用GL渲染接口</span></span><br><span class="line">       gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, <span class="number">0</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 <h2 id="创建shader程序"><a href="#创建shader程序" class="headerlink" title="创建shader程序"></a>创建shader程序</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> shaderProgram;</span><br><span class="line">   </span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">initShaders</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">       <span class="keyword">var</span> fragmentShader = getShader(gl, <span class="string">"shader-fs"</span>);</span><br><span class="line">       <span class="keyword">var</span> vertexShader = getShader(gl, <span class="string">"shader-vs"</span>);</span><br><span class="line">	<span class="comment">//创建shader程序</span></span><br><span class="line">       shaderProgram = gl.createProgram();</span><br><span class="line">       gl.attachShader(shaderProgram, vertexShader);</span><br><span class="line">       gl.attachShader(shaderProgram, fragmentShader);</span><br><span class="line">       gl.linkProgram(shaderProgram);</span><br><span class="line"></span><br><span class="line">       <span class="keyword">if</span> (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) &#123;</span><br><span class="line">           alert(<span class="string">"Could not initialise shaders"</span>);</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       gl.useProgram(shaderProgram);</span><br><span class="line">	<span class="comment">//获取顶点着色器中的顶点坐标变量</span></span><br><span class="line">       shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, <span class="string">"aVertexPosition"</span>);</span><br><span class="line">       gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);</span><br><span class="line">	<span class="comment">//获取顶点着色器中的纹理坐标变量</span></span><br><span class="line">       shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, <span class="string">"aTextureCoord"</span>);</span><br><span class="line">       gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);</span><br><span class="line">	<span class="comment">//获取顶点着色器中的观察矩阵变量</span></span><br><span class="line">       shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, <span class="string">"uPMatrix"</span>);</span><br><span class="line">	<span class="comment">//获取顶点着色器中的模型矩阵变量</span></span><br><span class="line">       shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, <span class="string">"uMVMatrix"</span>);</span><br><span class="line">	<span class="comment">//获取顶点着色器中的纹理位置变量</span></span><br><span class="line">       shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, <span class="string">"uSampler"</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
@@ -985,7 +561,7 @@
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2018/06/12/webGL光照/" id="post_nav-newer" class="prev-content">
+        <a href="/2018/06/12/webGL球体模型/" id="post_nav-newer" class="prev-content">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_back</i>
             </button>
