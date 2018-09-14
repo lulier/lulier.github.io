@@ -613,7 +613,7 @@
         pMatrix = okMat4Proj(45, laptopScreenAspectRatio, 0.1, 100.0);
         
         gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, false);
-        gl.uniform3f(shaderProgram.ambientLightingColorUniform, 0.2, 0.2, 0.2);
+        gl.uniform3f(shaderProgram.ambientLightingColorUniform, 0.5, 0.5, 0.5);
         gl.uniform3f(shaderProgram.pointLightingLocationUniform, 0, 0, -5);
         gl.uniform3f(shaderProgram.pointLightingDiffuseColorUniform, 0.8, 0.8, 0.8);
 
@@ -628,12 +628,12 @@
 
         mvMatrix.identity();
 
-        mvMatrix.translate(OAK.SPACE_LOCAL, 0, 0, -5, true);
-        mvMatrix.rotX(OAK.SPACE_LOCAL, 30, true);
+        mvMatrix.translate(OAK.SPACE_LOCAL, -6.8, -4.3, -14, true);
+        // mvMatrix.rotX(OAK.SPACE_LOCAL, -15, true);
 
         mvPushMatrix();
         mvMatrix.rotY(OAK.SPACE_LOCAL, moonAngle, true);
-        mvMatrix.translate(OAK.SPACE_LOCAL, 2, 0, 0, true);
+        // mvMatrix.translate(OAK.SPACE_LOCAL, 2, 0, 0, true);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, moonTexture);
@@ -650,13 +650,13 @@
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
         setMatrixUniforms();
-        gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        // gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
         mvPopMatrix();
 
 
         mvPushMatrix();
         mvMatrix.rotY(OAK.SPACE_LOCAL, cubeAngle, true);
-        mvMatrix.translate(OAK.SPACE_LOCAL, 1.25, 0, 0, true);
+        // mvMatrix.translate(OAK.SPACE_LOCAL, 0, 0, 0, true);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
@@ -699,8 +699,8 @@
         
         mvPushMatrix();
 
-        mvMatrix.translate(OAK.SPACE_LOCAL, 0, -0.4, -2.2, true);
-        mvMatrix.rotY(OAK.SPACE_LOCAL, laptopAngle, true);
+        mvMatrix.translate(OAK.SPACE_LOCAL, 0, -0.4, -2.0, true);
+        // mvMatrix.rotY(OAK.SPACE_LOCAL, laptopAngle, true);
         mvMatrix.rotX(OAK.SPACE_LOCAL, -90, true);
 
         gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);

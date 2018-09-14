@@ -17,6 +17,802 @@
             '1.5.0'
         ]
     </script>
+    <script type="text/javascript" src="Oak3D_v_0_5.js"></script>
+
+    <script id="per-fragment-lighting-fs" type="x-shader/x-fragment">
+    
+        precision mediump float;
+    
+    
+        varying vec2 vTextureCoord;
+        varying vec3 vTransformedNormal;
+        varying vec4 vPosition;
+    
+        uniform vec3 uMaterialAmbientColor;
+        uniform vec3 uMaterialDiffuseColor;
+        uniform vec3 uMaterialSpecularColor;
+        uniform float uMaterialShininess;
+        uniform vec3 uMaterialEmissiveColor;
+    
+        uniform bool uShowSpecularHighlights;
+        uniform bool uUseTextures;
+    
+        uniform vec3 uAmbientLightingColor;
+    
+        uniform vec3 uPointLightingLocation;
+        uniform vec3 uPointLightingDiffuseColor;
+        uniform vec3 uPointLightingSpecularColor;
+    
+        uniform sampler2D uSampler;
+    
+    
+        void main(void) {
+            vec3 ambientLightWeighting = uAmbientLightingColor;
+    
+            vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);
+            vec3 normal = normalize(vTransformedNormal);
+    
+            vec3 specularLightWeighting = vec3(0.0, 0.0, 0.0);
+            if (uShowSpecularHighlights) {
+                vec3 eyeDirection = normalize(-vPosition.xyz);
+                vec3 reflectionDirection = reflect(-lightDirection, normal);
+    
+                float specularLightBrightness = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uMaterialShininess);
+                specularLightWeighting = uPointLightingSpecularColor * specularLightBrightness;
+            }
+    
+            float diffuseLightBrightness = max(dot(normal, lightDirection), 0.0);
+            vec3 diffuseLightWeighting = uPointLightingDiffuseColor * diffuseLightBrightness;
+    
+            vec3 materialAmbientColor = uMaterialAmbientColor;
+            vec3 materialDiffuseColor = uMaterialDiffuseColor;
+            vec3 materialSpecularColor = uMaterialSpecularColor;
+            vec3 materialEmissiveColor = uMaterialEmissiveColor;
+            float alpha = 1.0;
+            if (uUseTextures) {
+                vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+                materialAmbientColor = materialAmbientColor * textureColor.rgb;
+                materialDiffuseColor = materialDiffuseColor * textureColor.rgb;
+                materialEmissiveColor = materialEmissiveColor * textureColor.rgb;
+                alpha = textureColor.a;
+            }
+            gl_FragColor = vec4(
+                materialAmbientColor * ambientLightWeighting
+                + materialDiffuseColor * diffuseLightWeighting
+                + materialSpecularColor * specularLightWeighting
+                + materialEmissiveColor,
+                alpha
+            );
+        }
+    </script>
+    
+    <script id="per-fragment-lighting-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec3 aVertexNormal;
+        attribute vec2 aTextureCoord;
+    
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat4 uNMatrix;
+    
+        varying vec2 vTextureCoord;
+        varying vec3 vTransformedNormal;
+        varying vec4 vPosition;
+    
+        void main(void) {
+            vPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+            gl_Position = uPMatrix * vPosition;
+            vTextureCoord = aTextureCoord;
+            vTransformedNormal = (uNMatrix * vec4(aVertexNormal, 0.0)).xyz;
+        }
+    </script>
+    
+    
+    <script type="text/javascript">
+    
+        var gl;
+    
+        function initGL(canvas) {
+            try {
+                gl = canvas.getContext("experimental-webgl");
+                gl.viewportWidth = canvas.width;
+                gl.viewportHeight = canvas.height;
+            } catch (e) {
+            }
+            if (!gl) {
+                alert("Could not initialise WebGL, sorry :-(");
+            }
+        }
+    
+    
+        function getShader(gl, id) {
+            var shaderScript = document.getElementById(id);
+            if (!shaderScript) {
+                return null;
+            }
+    
+            var str = "";
+            var k = shaderScript.firstChild;
+            while (k) {
+                if (k.nodeType == 3) {
+                    str += k.textContent;
+                }
+                k = k.nextSibling;
+            }
+    
+            var shader;
+            if (shaderScript.type == "x-shader/x-fragment") {
+                shader = gl.createShader(gl.FRAGMENT_SHADER);
+            } else if (shaderScript.type == "x-shader/x-vertex") {
+                shader = gl.createShader(gl.VERTEX_SHADER);
+            } else {
+                return null;
+            }
+    
+            gl.shaderSource(shader, str);
+            gl.compileShader(shader);
+    
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                alert(gl.getShaderInfoLog(shader));
+                return null;
+            }
+    
+            return shader;
+        }
+    
+    
+        var shaderProgram;
+    
+        function initShaders() {
+            var fragmentShader = getShader(gl, "per-fragment-lighting-fs");
+            var vertexShader = getShader(gl, "per-fragment-lighting-vs");
+    
+            shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+    
+            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+                alert("Could not initialise shaders");
+            }
+    
+            gl.useProgram(shaderProgram);
+    
+            shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+            gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+    
+            shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+            gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+    
+            shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+            gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+    
+            shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+            shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+            shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
+            shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+    
+            shaderProgram.materialAmbientColorUniform = gl.getUniformLocation(shaderProgram, "uMaterialAmbientColor");
+            shaderProgram.materialDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "uMaterialDiffuseColor");
+            shaderProgram.materialSpecularColorUniform = gl.getUniformLocation(shaderProgram, "uMaterialSpecularColor");
+            shaderProgram.materialShininessUniform = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
+            shaderProgram.materialEmissiveColorUniform = gl.getUniformLocation(shaderProgram, "uMaterialEmissiveColor");
+            shaderProgram.showSpecularHighlightsUniform = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
+            shaderProgram.useTexturesUniform = gl.getUniformLocation(shaderProgram, "uUseTextures");
+            shaderProgram.ambientLightingColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientLightingColor");
+            shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
+            shaderProgram.pointLightingSpecularColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
+            shaderProgram.pointLightingDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
+        }
+    
+    
+        function handleLoadedTexture(texture) {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
+    
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+    
+    
+        var moonTexture;
+        var crateTexture;
+    
+        function initTextures() {
+            moonTexture = gl.createTexture();
+            moonTexture.image = new Image();
+            moonTexture.image.onload = function () {
+                handleLoadedTexture(moonTexture)
+            }
+            moonTexture.image.src = "moon.gif";
+    
+            crateTexture = gl.createTexture();
+            crateTexture.image = new Image();
+            crateTexture.image.onload = function () {
+                handleLoadedTexture(crateTexture)
+            }
+            crateTexture.image.src = "crate.gif";
+        }
+    
+    
+        var mvMatrix = new okMat4();
+        var mvMatrixStack = [];
+        var pMatrix = new okMat4();
+    
+        function mvPushMatrix() {
+            var copy = new okMat4();
+            mvMatrix.clone(copy);
+            mvMatrixStack.push(copy);
+        }
+    
+        function mvPopMatrix() {
+            if (mvMatrixStack.length == 0) {
+                throw "Invalid popMatrix!";
+            }
+            mvMatrix = mvMatrixStack.pop();
+        }
+    
+    
+        function setMatrixUniforms() {
+            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix.toArray());
+            gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix.toArray());
+    
+            var normalMatrix = mvMatrix.inverse().transpose();
+            gl.uniformMatrix4fv(shaderProgram.nMatrixUniform, false, normalMatrix.toArray());
+        }
+    
+        function degToRad(degrees) {
+            return degrees * Math.PI / 180;
+        }
+    
+    
+        var rttFramebuffer;
+        var rttTexture;
+    
+        function initTextureFramebuffer() {
+            rttFramebuffer = gl.createFramebuffer();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);
+            rttFramebuffer.width = 512;
+            rttFramebuffer.height = 512;
+    
+            rttTexture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, rttTexture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
+    
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, rttFramebuffer.width, rttFramebuffer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    
+            var renderbuffer = gl.createRenderbuffer();
+            gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, rttFramebuffer.width, rttFramebuffer.height);
+    
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, rttTexture, 0);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);
+    
+            gl.bindTexture(gl.TEXTURE_2D, null);
+            gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
+    
+    
+        var cubeVertexPositionBuffer;
+        var cubeVertexNormalBuffer;
+        var cubeVertexTextureCoordBuffer;
+        var cubeVertexIndexBuffer;
+    
+        var moonVertexPositionBuffer;
+        var moonVertexNormalBuffer;
+        var moonVertexTextureCoordBuffer;
+        var moonVertexIndexBuffer;
+    
+        var laptopScreenVertexPositionBuffer;
+        var laptopScreenVertexNormalBuffer;
+        var laptopScreenVertexTextureCoordBuffer;
+    
+        function initBuffers() {
+            cubeVertexPositionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+            vertices = [
+                // Front face
+                -1.0, -1.0,  1.0,
+                 1.0, -1.0,  1.0,
+                 1.0,  1.0,  1.0,
+                -1.0,  1.0,  1.0,
+    
+                // Back face
+                -1.0, -1.0, -1.0,
+                -1.0,  1.0, -1.0,
+                 1.0,  1.0, -1.0,
+                 1.0, -1.0, -1.0,
+    
+                // Top face
+                -1.0,  1.0, -1.0,
+                -1.0,  1.0,  1.0,
+                 1.0,  1.0,  1.0,
+                 1.0,  1.0, -1.0,
+    
+                // Bottom face
+                -1.0, -1.0, -1.0,
+                 1.0, -1.0, -1.0,
+                 1.0, -1.0,  1.0,
+                -1.0, -1.0,  1.0,
+    
+                // Right face
+                 1.0, -1.0, -1.0,
+                 1.0,  1.0, -1.0,
+                 1.0,  1.0,  1.0,
+                 1.0, -1.0,  1.0,
+    
+                // Left face
+                -1.0, -1.0, -1.0,
+                -1.0, -1.0,  1.0,
+                -1.0,  1.0,  1.0,
+                -1.0,  1.0, -1.0,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            cubeVertexPositionBuffer.itemSize = 3;
+            cubeVertexPositionBuffer.numItems = 24;
+    
+            cubeVertexNormalBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+            var vertexNormals = [
+                // Front face
+                 0.0,  0.0,  1.0,
+                 0.0,  0.0,  1.0,
+                 0.0,  0.0,  1.0,
+                 0.0,  0.0,  1.0,
+    
+                // Back face
+                 0.0,  0.0, -1.0,
+                 0.0,  0.0, -1.0,
+                 0.0,  0.0, -1.0,
+                 0.0,  0.0, -1.0,
+    
+                // Top face
+                 0.0,  1.0,  0.0,
+                 0.0,  1.0,  0.0,
+                 0.0,  1.0,  0.0,
+                 0.0,  1.0,  0.0,
+    
+                // Bottom face
+                 0.0, -1.0,  0.0,
+                 0.0, -1.0,  0.0,
+                 0.0, -1.0,  0.0,
+                 0.0, -1.0,  0.0,
+    
+                // Right face
+                 1.0,  0.0,  0.0,
+                 1.0,  0.0,  0.0,
+                 1.0,  0.0,  0.0,
+                 1.0,  0.0,  0.0,
+    
+                // Left face
+                -1.0,  0.0,  0.0,
+                -1.0,  0.0,  0.0,
+                -1.0,  0.0,  0.0,
+                -1.0,  0.0,  0.0,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+            cubeVertexNormalBuffer.itemSize = 3;
+            cubeVertexNormalBuffer.numItems = 24;
+    
+            cubeVertexTextureCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+            var textureCoords = [
+                // Front face
+                0.0, 0.0,
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0,
+    
+                // Back face
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0,
+                0.0, 0.0,
+    
+                // Top face
+                0.0, 1.0,
+                0.0, 0.0,
+                1.0, 0.0,
+                1.0, 1.0,
+    
+                // Bottom face
+                1.0, 1.0,
+                0.0, 1.0,
+                0.0, 0.0,
+                1.0, 0.0,
+    
+                // Right face
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0,
+                0.0, 0.0,
+    
+                // Left face
+                0.0, 0.0,
+                1.0, 0.0,
+                1.0, 1.0,
+                0.0, 1.0
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+            cubeVertexTextureCoordBuffer.itemSize = 2;
+            cubeVertexTextureCoordBuffer.numItems = 24;
+    
+            cubeVertexIndexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+            var cubeVertexIndices = [
+                0, 1, 2,      0, 2, 3,    // Front face
+                4, 5, 6,      4, 6, 7,    // Back face
+                8, 9, 10,     8, 10, 11,  // Top face
+                12, 13, 14,   12, 14, 15, // Bottom face
+                16, 17, 18,   16, 18, 19, // Right face
+                20, 21, 22,   20, 22, 23  // Left face
+            ];
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
+            cubeVertexIndexBuffer.itemSize = 1;
+            cubeVertexIndexBuffer.numItems = 36;
+    
+    
+            var latitudeBands = 30;
+            var longitudeBands = 30;
+            var radius = 1;
+    
+            var vertexPositionData = [];
+            var normalData = [];
+            var textureCoordData = [];
+            for (var latNumber=0; latNumber <= latitudeBands; latNumber++) {
+                var theta = latNumber * Math.PI / latitudeBands;
+                var sinTheta = Math.sin(theta);
+                var cosTheta = Math.cos(theta);
+    
+                for (var longNumber=0; longNumber <= longitudeBands; longNumber++) {
+                    var phi = longNumber * 2 * Math.PI / longitudeBands;
+                    var sinPhi = Math.sin(phi);
+                    var cosPhi = Math.cos(phi);
+    
+                    var x = cosPhi * sinTheta;
+                    var y = cosTheta;
+                    var z = sinPhi * sinTheta;
+                    var u = 1 - (longNumber / longitudeBands);
+                    var v = 1 - (latNumber / latitudeBands);
+    
+                    normalData.push(x);
+                    normalData.push(y);
+                    normalData.push(z);
+                    textureCoordData.push(u);
+                    textureCoordData.push(v);
+                    vertexPositionData.push(radius * x);
+                    vertexPositionData.push(radius * y);
+                    vertexPositionData.push(radius * z);
+                }
+            }
+    
+            var indexData = [];
+            for (var latNumber=0; latNumber < latitudeBands; latNumber++) {
+                for (var longNumber=0; longNumber < longitudeBands; longNumber++) {
+                    var first = (latNumber * (longitudeBands + 1)) + longNumber;
+                    var second = first + longitudeBands + 1;
+                    indexData.push(first);
+                    indexData.push(second);
+                    indexData.push(first + 1);
+    
+                    indexData.push(second);
+                    indexData.push(second + 1);
+                    indexData.push(first + 1);
+                }
+            }
+    
+            moonVertexNormalBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexNormalBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalData), gl.STATIC_DRAW);
+            moonVertexNormalBuffer.itemSize = 3;
+            moonVertexNormalBuffer.numItems = normalData.length / 3;
+    
+            moonVertexTextureCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexTextureCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordData), gl.STATIC_DRAW);
+            moonVertexTextureCoordBuffer.itemSize = 2;
+            moonVertexTextureCoordBuffer.numItems = textureCoordData.length / 2;
+    
+            moonVertexPositionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexPositionData), gl.STATIC_DRAW);
+            moonVertexPositionBuffer.itemSize = 3;
+            moonVertexPositionBuffer.numItems = vertexPositionData.length / 3;
+    
+            moonVertexIndexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indexData), gl.STREAM_DRAW);
+            moonVertexIndexBuffer.itemSize = 1;
+            moonVertexIndexBuffer.numItems = indexData.length;
+    
+    
+            laptopScreenVertexPositionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexPositionBuffer);
+            vertices = [
+                 0.580687, 0.659, 0.813106,
+                -0.580687, 0.659, 0.813107,
+                 0.580687, 0.472, 0.113121,
+                -0.580687, 0.472, 0.113121,
+                ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+            laptopScreenVertexPositionBuffer.itemSize = 3;
+            laptopScreenVertexPositionBuffer.numItems = 4;
+    
+            laptopScreenVertexNormalBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexNormalBuffer);
+            var vertexNormals = [
+                 0.000000, -0.965926, 0.258819,
+                 0.000000, -0.965926, 0.258819,
+                 0.000000, -0.965926, 0.258819,
+                 0.000000, -0.965926, 0.258819,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+            laptopScreenVertexNormalBuffer.itemSize = 3;
+            laptopScreenVertexNormalBuffer.numItems = 4;
+    
+            laptopScreenVertexTextureCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexTextureCoordBuffer);
+            var textureCoords = [
+                1.0, 1.0,
+                0.0, 1.0,
+                1.0, 0.0,
+                0.0, 0.0,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+            laptopScreenVertexTextureCoordBuffer.itemSize = 2;
+            laptopScreenVertexTextureCoordBuffer.numItems = 4;
+        }
+    
+    
+        var laptopVertexPositionBuffer;
+        var laptopVertexNormalBuffer;
+        var laptopVertexTextureCoordBuffer;
+        var laptopVertexIndexBuffer;
+    
+        function handleLoadedLaptop(laptopData) {
+            laptopVertexNormalBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexNormalBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(laptopData.vertexNormals), gl.STATIC_DRAW);
+            laptopVertexNormalBuffer.itemSize = 3;
+            laptopVertexNormalBuffer.numItems = laptopData.vertexNormals.length / 3;
+    
+            laptopVertexTextureCoordBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexTextureCoordBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(laptopData.vertexTextureCoords), gl.STATIC_DRAW);
+            laptopVertexTextureCoordBuffer.itemSize = 2;
+            laptopVertexTextureCoordBuffer.numItems = laptopData.vertexTextureCoords.length / 2;
+    
+            laptopVertexPositionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexPositionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(laptopData.vertexPositions), gl.STATIC_DRAW);
+            laptopVertexPositionBuffer.itemSize = 3;
+            laptopVertexPositionBuffer.numItems = laptopData.vertexPositions.length / 3;
+    
+            laptopVertexIndexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, laptopVertexIndexBuffer);
+            gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(laptopData.indices), gl.STREAM_DRAW);
+            laptopVertexIndexBuffer.itemSize = 1;
+            laptopVertexIndexBuffer.numItems = laptopData.indices.length;
+        }
+    
+    
+        function loadLaptop() {
+            var request = new XMLHttpRequest();
+            request.open("GET", "macbook.json");
+            request.onreadystatechange = function () {
+                if (request.readyState == 4) {
+                    handleLoadedLaptop(JSON.parse(request.responseText));
+                }
+            }
+            request.send();
+        }
+    
+    
+    
+        var laptopScreenAspectRatio = 1.66;
+    
+        var moonAngle = 180;
+        var cubeAngle = 0;
+    
+        function drawSceneOnLaptopScreen() {
+            gl.viewport(0, 0, rttFramebuffer.width, rttFramebuffer.height);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    
+            pMatrix = okMat4Proj(45, laptopScreenAspectRatio, 0.1, 100.0);
+            
+            gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, false);
+            gl.uniform3f(shaderProgram.ambientLightingColorUniform, 0.5, 0.5, 0.5);
+            gl.uniform3f(shaderProgram.pointLightingLocationUniform, 0, 0, -5);
+            gl.uniform3f(shaderProgram.pointLightingDiffuseColorUniform, 0.8, 0.8, 0.8);
+    
+            gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, false);
+            gl.uniform1i(shaderProgram.useTexturesUniform, true);
+    
+            gl.uniform3f(shaderProgram.materialAmbientColorUniform, 1.0, 1.0, 1.0);
+            gl.uniform3f(shaderProgram.materialDiffuseColorUniform, 1.0, 1.0, 1.0);
+            gl.uniform3f(shaderProgram.materialSpecularColorUniform, 0.0, 0.0, 0.0);
+            gl.uniform1f(shaderProgram.materialShininessUniform, 0);
+            gl.uniform3f(shaderProgram.materialEmissiveColorUniform, 0.0, 0.0, 0.0);
+    
+            mvMatrix.identity();
+    
+            mvMatrix.translate(OAK.SPACE_LOCAL, -6.8, -4.3, -14, true);
+            // mvMatrix.rotX(OAK.SPACE_LOCAL, -15, true);
+    
+            mvPushMatrix();
+            mvMatrix.rotY(OAK.SPACE_LOCAL, moonAngle, true);
+            // mvMatrix.translate(OAK.SPACE_LOCAL, 2, 0, 0, true);
+    
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, moonTexture);
+            gl.uniform1i(shaderProgram.samplerUniform, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexPositionBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, moonVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexTextureCoordBuffer);
+            gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, moonVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, moonVertexNormalBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, moonVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, moonVertexIndexBuffer);
+            setMatrixUniforms();
+            // gl.drawElements(gl.TRIANGLES, moonVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+            mvPopMatrix();
+    
+    
+            mvPushMatrix();
+            mvMatrix.rotY(OAK.SPACE_LOCAL, cubeAngle, true);
+            // mvMatrix.translate(OAK.SPACE_LOCAL, 0, 0, 0, true);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+            gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, crateTexture);
+            gl.uniform1i(shaderProgram.samplerUniform, 0);
+    
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+            setMatrixUniforms();
+            gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+            mvPopMatrix();
+    
+            gl.bindTexture(gl.TEXTURE_2D, rttTexture);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+    
+    
+        var laptopAngle = 0;
+    
+        function drawScene() {
+            gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);
+            drawSceneOnLaptopScreen();
+    
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    
+            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    
+            pMatrix = okMat4Proj(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+    
+            mvMatrix.identity();
+            
+            mvPushMatrix();
+    
+            mvMatrix.translate(OAK.SPACE_LOCAL, 0, -0.4, -2.0, true);
+            // mvMatrix.rotY(OAK.SPACE_LOCAL, laptopAngle, true);
+            mvMatrix.rotX(OAK.SPACE_LOCAL, -90, true);
+    
+            gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, true);
+            gl.uniform3f(shaderProgram.pointLightingLocationUniform, -1, 2, -1);
+    
+            gl.uniform3f(shaderProgram.ambientLightingColorUniform, 0.2, 0.2, 0.2);
+            gl.uniform3f(shaderProgram.pointLightingDiffuseColorUniform, 0.8, 0.8, 0.8);
+            gl.uniform3f(shaderProgram.pointLightingSpecularColorUniform, 0.8, 0.8, 0.8);
+    
+            // The laptop body is quite shiny and has no texture.  It reflects lots of specular light
+            gl.uniform3f(shaderProgram.materialAmbientColorUniform, 1.0, 1.0, 1.0);
+            gl.uniform3f(shaderProgram.materialDiffuseColorUniform, 1.0, 1.0, 1.0);
+            gl.uniform3f(shaderProgram.materialSpecularColorUniform, 1.5, 1.5, 1.5);
+            gl.uniform1f(shaderProgram.materialShininessUniform, 5);
+            gl.uniform3f(shaderProgram.materialEmissiveColorUniform, 0.0, 0.0, 0.0);
+            gl.uniform1i(shaderProgram.useTexturesUniform, false);
+    
+            if (laptopVertexPositionBuffer) {
+                gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexPositionBuffer);
+                gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, laptopVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+                gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexTextureCoordBuffer);
+                gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, laptopVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+                gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexNormalBuffer);
+                gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, laptopVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, laptopVertexIndexBuffer);
+                setMatrixUniforms();
+                gl.drawElements(gl.TRIANGLES, laptopVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+            }
+    
+            gl.uniform3f(shaderProgram.materialAmbientColorUniform, 0.0, 0.0, 0.0);
+            gl.uniform3f(shaderProgram.materialDiffuseColorUniform, 0.0, 0.0, 0.0);
+            gl.uniform3f(shaderProgram.materialSpecularColorUniform, 0.5, 0.5, 0.5);
+            gl.uniform1f(shaderProgram.materialShininessUniform, 20);
+            gl.uniform3f(shaderProgram.materialEmissiveColorUniform, 1.5, 1.5, 1.5);
+            gl.uniform1i(shaderProgram.useTexturesUniform, true);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexPositionBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, laptopScreenVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexNormalBuffer);
+            gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, laptopScreenVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexTextureCoordBuffer);
+            gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, laptopScreenVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+    
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, rttTexture);
+            gl.uniform1i(shaderProgram.samplerUniform, 0);
+    
+            setMatrixUniforms();
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, laptopScreenVertexPositionBuffer.numItems);
+    
+            mvPopMatrix();
+        }
+    
+    
+        var lastTime = 0;
+    
+        function animate() {
+            var timeNow = new Date().getTime();
+            if (lastTime != 0) {
+                var elapsed = timeNow - lastTime;
+    
+                moonAngle += 0.05 * elapsed;
+                cubeAngle += 0.05 * elapsed;
+    
+                laptopAngle -= 0.005 * elapsed;
+            }
+            lastTime = timeNow;
+        }
+    
+    
+        function tick() {
+            okRequestAnimationFrame(tick);
+            drawScene();
+            animate();
+        }
+    
+    
+        function webGLStart() {
+            var canvas = document.getElementById("canvas");
+            initGL(canvas);
+            initTextureFramebuffer();
+            initShaders();
+            initBuffers();
+            initTextures();
+            loadLaptop();
+    
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.enable(gl.DEPTH_TEST);
+    
+            tick();
+        }
+    
+    </script>
 
     <!-- dns prefetch -->
     <meta http-equiv="x-dns-prefetch-control" content="on">
@@ -258,7 +1054,7 @@
 
     
         <meta property="article:published_time" content="Thu Jun 21 2018 15:35:15 GMT+0800">
-        <meta property="article:modified_time" content="Mon Sep 10 2018 10:42:03 GMT+0800">
+        <meta property="article:modified_time" content="Fri Sep 14 2018 15:35:07 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -281,7 +1077,7 @@
     "mainEntityOfPage": "http://lulier.github.io/2018/06/21/webGL渲染到纹理/index.html",
     "headline": "webGL渲染到纹理",
     "datePublished": "Thu Jun 21 2018 15:35:15 GMT+0800",
-    "dateModified": "Mon Sep 10 2018 10:42:03 GMT+0800",
+    "dateModified": "Fri Sep 14 2018 15:35:07 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -319,7 +1115,7 @@
 
 
     
-        <body id="scheme-Paradox" class="lazy">
+        <body id="scheme-Paradox" class="lazy" onload="webGLStart();">
             <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
                 
 
@@ -365,7 +1161,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#webGL"><span class="post-toc-number">1.</span> <span class="post-toc-text">webGL</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#webGL编程"><span class="post-toc-number">2.</span> <span class="post-toc-text">webGL编程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#不带光照的webGL-demo"><span class="post-toc-number">3.</span> <span class="post-toc-text">不带光照的webGL demo</span></a></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#帧缓冲"><span class="post-toc-number">1.</span> <span class="post-toc-text">帧缓冲</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#渲染到纹理的demo"><span class="post-toc-number">2.</span> <span class="post-toc-text">渲染到纹理的demo</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#webGL代码"><span class="post-toc-number">3.</span> <span class="post-toc-text">webGL代码</span></a></li></ol>
     </ul>
     
 
@@ -500,18 +1296,14 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <h1 id="webGL"><a href="#webGL" class="headerlink" title="webGL"></a>webGL</h1><p>百度百科对于webGL的定义：</p>
-<blockquote>
-<p>WebGL（全写Web Graphics Library）是一种3D绘图协议，这种绘图技术标准允许把JavaScript和OpenGL ES 2.0结合在一起，通过增加OpenGL ES 2.0的一个JavaScript绑定，WebGL可以为HTML5 Canvas提供硬件3D加速渲染，这样Web开发人员就可以借助系统显卡来在浏览器里更流畅地展示3D场景和模型了，还能创建复杂的导航和数据视觉化。</p>
-</blockquote>
-<p>从定义中可以看出，webGL就是给openGL ES套上了一层JavaScript的API，由于之前看过OpenGL编程，加上最近的项目都是JavaScript开发，看webGL也是较快就上手。 </p>
-<h1 id="webGL编程"><a href="#webGL编程" class="headerlink" title="webGL编程"></a>webGL编程</h1><p>webGL编程流程跟openGL是一样的，首先是顶点数据和顶点坐标的准备，如果使用贴图的话，还需要有贴图uv坐标。顶点数据准备好了，接下来是编译shader代码和加载贴图资源。</p>
-<p>在所有数据都准备好了之后，程序就可以开始渲染的主循环，渲染的主循环主要是在每一帧里，将前面准备好的数据填充到shader程序对应的变量上，实际上就是调用openGL接口，将数据推送到GPU内存。之前看过一些CUDA编程，这里的uniform变量对应的应该是global memory（如果使用的是英伟达显卡的话）。最后调用渲染接口，webGL负责在帧缓冲中将顶点的颜色值填好。</p>
-<p>下面这个流程图描述了webGL渲染管线的工作流程：</p>
-<blockquote>
-<p><img src="/images/9.png" alt=""></p>
-</blockquote>
-<h1 id="不带光照的webGL-demo"><a href="#不带光照的webGL-demo" class="headerlink" title="不带光照的webGL demo"></a>不带光照的webGL demo</h1><p>下面这个demo是经典的webGLdemo，实现了使用一张2d箱子贴图渲染的一个3d箱子，同时实现箱子的旋转和移动（键盘的上下左右控制旋转，pageup是沿Z轴负方向移动，pagedown是沿Z轴正方向移动）。不过这里改变的是箱子本身的旋转和坐标，摄像机的位置没有发生过变化。</p>
+        <h1 id="帧缓冲"><a href="#帧缓冲" class="headerlink" title="帧缓冲"></a>帧缓冲</h1><p>当你使用WebGL API渲染3D内容时，显卡需要一块缓冲区来存储渲染的最终结果，我们称为帧缓冲。如果你没有指定，会存在一个默认的 frame buffer，它代表最终会被显示在网页中的缓冲区域。<br>WebGL提供了接口给我们自定义帧缓冲区，我们可以创建了一个自己的frame buffer，指定WebGL将渲染结果输送到所创建的frame buffer中，并指定它使用一张纹理作为存储像素颜色的缓冲区。这样就可以将渲染的结果显示出来。</p>
+<p>在游戏开发中，有时候我们会在主渲染之外创建一个离屏的canvas，在这个canvas上进行一些自定义的渲染，然后将渲染的结果保存到图片中用于展示。cocos creator中的label就是使用这个方式实现的，cocos会为每个label创建一个canvas（当然，label是复用的），将文字的渲染结果保存到贴图中，再使用贴图展示文字。游戏中截屏的原理也是类似的，通过获取帧缓冲中指定区域的像素颜色集合，将其写入纹理对象中，最后保存为图片。</p>
+<h1 id="渲染到纹理的demo"><a href="#渲染到纹理的demo" class="headerlink" title="渲染到纹理的demo"></a>渲染到纹理的demo</h1><p>这个demo加载了一个笔记本的模型，然后在我们自定义的frame buffer中缓存的一个旋转箱子的渲染结果，并保存在一张纹理中，最后在笔记本的屏幕上使用这个纹理将箱子渲染出来。</p>
+<canvas id="canvas" style="border: none;" width="500" height="500"></canvas>
+<h1 id="webGL代码"><a href="#webGL代码" class="headerlink" title="webGL代码"></a>webGL代码</h1><p>我们首先需要申请一块区域来存储每个像素渲染后的颜色结果，同时，我们还需要一个depth buffer(深度缓冲区)来处理视线遮挡，这样，远处的像素点在做深度测试的时候就会被丢弃，在视觉上给人一种被挡住的感觉。下面是具体的webGL代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">var</span> rttFramebuffer;<span class="comment">//frame buffer</span></span><br><span class="line">   <span class="keyword">var</span> rttTexture;<span class="comment">//用于存储渲染结果的纹理贴图</span></span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">function</span> <span class="title">initTextureFramebuffer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//创建frame buffer</span></span><br><span class="line">       rttFramebuffer = gl.createFramebuffer();</span><br><span class="line">	<span class="comment">//绑定frame buffer</span></span><br><span class="line">       gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);</span><br><span class="line">	<span class="comment">//设置buffer的宽高</span></span><br><span class="line">       rttFramebuffer.width = <span class="number">512</span>;</span><br><span class="line">       rttFramebuffer.height = <span class="number">512</span>;</span><br><span class="line">       </span><br><span class="line">       <span class="comment">//创建纹理贴图</span></span><br><span class="line">       rttTexture = gl.createTexture();</span><br><span class="line">	<span class="comment">//绑定纹理贴图</span></span><br><span class="line">       gl.bindTexture(gl.TEXTURE_2D, rttTexture);</span><br><span class="line">	<span class="comment">//设置纹理缩放处理</span></span><br><span class="line">       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);</span><br><span class="line">       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);</span><br><span class="line">       gl.generateMipmap(gl.TEXTURE_2D);</span><br><span class="line">	<span class="comment">//加载图片到纹理，这里我们不需要加载任何图片，所以我们最后一个图片数据参数传了null</span></span><br><span class="line">       gl.texImage2D(gl.TEXTURE_2D, <span class="number">0</span>, gl.RGBA, rttFramebuffer.width, rttFramebuffer.height, <span class="number">0</span>, gl.RGBA, gl.UNSIGNED_BYTE, <span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//创建深度缓冲</span></span><br><span class="line">       <span class="keyword">var</span> renderbuffer = gl.createRenderbuffer();</span><br><span class="line">	<span class="comment">//绑定深度缓冲</span></span><br><span class="line">       gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);</span><br><span class="line">	<span class="comment">//调用gl.renderbufferStorage来通知WebGL当前render buffer用作深度缓冲区</span></span><br><span class="line">       gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, rttFramebuffer.width, rttFramebuffer.height);</span><br><span class="line">	<span class="comment">//指定使用rttTexture作为当前frame buffer的颜色缓冲</span></span><br><span class="line">       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, rttTexture, <span class="number">0</span>);</span><br><span class="line">	<span class="comment">//指定使用renderbuffer作为当前frame buffer的深度缓冲</span></span><br><span class="line">       gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, renderbuffer);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//解除绑定</span></span><br><span class="line">       gl.bindTexture(gl.TEXTURE_2D, <span class="literal">null</span>);</span><br><span class="line">       gl.bindRenderbuffer(gl.RENDERBUFFER, <span class="literal">null</span>);</span><br><span class="line">       gl.bindFramebuffer(gl.FRAMEBUFFER, <span class="literal">null</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//渲染主循环</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">drawScene</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="comment">//绑定rttFramebuffer为当前的帧缓冲</span></span><br><span class="line">       gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);</span><br><span class="line">	<span class="comment">//渲染屏幕中的箱子，并将结果保存在rttTexture中</span></span><br><span class="line">       drawSceneOnLaptopScreen();</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//恢复到默认的frame buffer</span></span><br><span class="line">       gl.bindFramebuffer(gl.FRAMEBUFFER, <span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">       ......</span><br><span class="line"></span><br><span class="line">	<span class="comment">//设置笔记本模型的顶点坐标，法线向量，顶点索引</span></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexPositionBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, laptopVertexPositionBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, laptopVertexNormalBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, laptopVertexNormalBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, laptopVertexIndexBuffer);</span><br><span class="line">       <span class="comment">//绘制笔记本</span></span><br><span class="line">       gl.drawElements(gl.TRIANGLES, laptopVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       ......</span><br><span class="line"></span><br><span class="line">	<span class="comment">//设置屏幕上用于渲染rttTexture的顶点坐标，纹理坐标，顶点索引</span></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexPositionBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, laptopScreenVertexPositionBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexNormalBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, laptopScreenVertexNormalBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">       gl.bindBuffer(gl.ARRAY_BUFFER, laptopScreenVertexTextureCoordBuffer);</span><br><span class="line">       gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, laptopScreenVertexTextureCoordBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//绑定rttTexture</span></span><br><span class="line">       gl.activeTexture(gl.TEXTURE0);</span><br><span class="line">       gl.bindTexture(gl.TEXTURE_2D, rttTexture);</span><br><span class="line">       gl.uniform1i(shaderProgram.samplerUniform, <span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//渲染屏幕的内容</span></span><br><span class="line">       gl.drawArrays(gl.TRIANGLE_STRIP, <span class="number">0</span>, laptopScreenVertexPositionBuffer.numItems);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  <span class="keyword">var</span> moonAngle = <span class="number">180</span>;</span><br><span class="line">  <span class="keyword">var</span> cubeAngle = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">drawSceneOnLaptopScreen</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="comment">//设置viewport尺寸</span></span><br><span class="line">      gl.viewport(<span class="number">0</span>, <span class="number">0</span>, rttFramebuffer.width, rttFramebuffer.height);</span><br><span class="line">      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);</span><br><span class="line"></span><br><span class="line">      pMatrix = okMat4Proj(<span class="number">45</span>, rttFramebuffer.width / rttFramebuffer.height, <span class="number">0.1</span>, <span class="number">100.0</span>);</span><br><span class="line">      </span><br><span class="line">......</span><br><span class="line"></span><br><span class="line"><span class="comment">//设置箱子的顶点坐标，法线向量，纹理坐标和顶点索引</span></span><br><span class="line">      gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);</span><br><span class="line">      gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">      gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);</span><br><span class="line">      gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">      gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);</span><br><span class="line">      gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, <span class="literal">false</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);</span><br><span class="line"></span><br><span class="line"><span class="comment">//绑定箱子纹理</span></span><br><span class="line">      gl.activeTexture(gl.TEXTURE0);</span><br><span class="line">      gl.bindTexture(gl.TEXTURE_2D, crateTexture);</span><br><span class="line">      gl.uniform1i(shaderProgram.samplerUniform, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//绘制箱子</span></span><br><span class="line">      gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, <span class="number">0</span>);</span><br><span class="line">      </span><br><span class="line"><span class="comment">//解除绑定</span></span><br><span class="line">      gl.bindTexture(gl.TEXTURE_2D, rttTexture);</span><br><span class="line">      gl.generateMipmap(gl.TEXTURE_2D);</span><br><span class="line">      gl.bindTexture(gl.TEXTURE_2D, <span class="literal">null</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
         
     

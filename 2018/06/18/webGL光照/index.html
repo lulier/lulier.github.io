@@ -303,10 +303,410 @@
     "description": "",
 }
 </script>
+<script type="text/javascript" src="Oak3D_v_0_5.js"></script>
+
+<script id="per-fragment-lighting-fs" type="x-shader/x-fragment">
+
+    precision mediump float;
 
 
-    
+    varying vec2 vTextureCoord;
+    varying vec3 vTransformedNormal;
+    varying vec4 vPosition;
 
+    uniform float uMaterialShininess;
+
+    uniform bool uShowSpecularHighlights;
+    uniform bool uUseLighting;
+    uniform bool uUseTextures;
+
+    uniform vec3 uAmbientColor;
+
+    uniform vec3 uPointLightingLocation;
+    uniform vec3 uPointLightingSpecularColor;
+    uniform vec3 uPointLightingDiffuseColor;
+
+    uniform sampler2D uSampler;
+
+
+    void main(void) {
+        vec3 lightWeighting;
+        if (!uUseLighting) {
+            lightWeighting = vec3(1.0, 1.0, 1.0);
+        } else {
+            vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);
+            vec3 normal = normalize(vTransformedNormal);
+
+            float specularLightWeighting = 0.0;
+            if (uShowSpecularHighlights) {
+                vec3 eyeDirection = normalize(-vPosition.xyz);
+                vec3 reflectionDirection = reflect(-lightDirection, normal);
+
+                specularLightWeighting = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uMaterialShininess);
+            }
+
+            float diffuseLightWeighting = max(dot(normal, lightDirection), 0.0);
+            lightWeighting = uAmbientColor
+                + uPointLightingSpecularColor * specularLightWeighting
+                + uPointLightingDiffuseColor * diffuseLightWeighting;
+        }
+
+        vec4 fragmentColor;
+        if (uUseTextures) {
+            fragmentColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        } else {
+            fragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+        gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);
+    }
+</script>
+
+<script id="per-fragment-lighting-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+    attribute vec2 aTextureCoord;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat4 uNMatrix;
+
+    varying vec2 vTextureCoord;
+    varying vec3 vTransformedNormal;
+    varying vec4 vPosition;
+
+
+    void main(void) {
+        vPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+        gl_Position = uPMatrix * vPosition;
+        vTextureCoord = aTextureCoord;
+        vTransformedNormal = (uNMatrix * vec4(aVertexNormal , 1.0)).xyz;
+    }
+</script>
+
+
+<script type="text/javascript">
+
+    var gl;
+
+    function initGL(canvas) {
+        try {
+            gl = canvas.getContext("experimental-webgl");
+            gl.viewportWidth = canvas.width;
+            gl.viewportHeight = canvas.height;
+        } catch (e) {
+        }
+        if (!gl) {
+            alert("Could not initialise WebGL, sorry :-(");
+        }
+    }
+
+
+    function getShader(gl, id) {
+        var shaderScript = document.getElementById(id);
+        if (!shaderScript) {
+            return null;
+        }
+
+        var str = "";
+        var k = shaderScript.firstChild;
+        while (k) {
+            if (k.nodeType == 3) {
+                str += k.textContent;
+            }
+            k = k.nextSibling;
+        }
+
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment") {
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        } else if (shaderScript.type == "x-shader/x-vertex") {
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        } else {
+            return null;
+        }
+
+        gl.shaderSource(shader, str);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(shader));
+            return null;
+        }
+
+        return shader;
+    }
+
+
+    var shaderProgram;
+
+    function initShaders() {
+        var fragmentShader = getShader(gl, "per-fragment-lighting-fs");
+        var vertexShader = getShader(gl, "per-fragment-lighting-vs");
+
+        shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+
+        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
+        }
+
+        gl.useProgram(shaderProgram);
+
+        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+        shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aVertexNormal");
+        gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+
+        shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+        gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+
+        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
+        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
+        shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
+        shaderProgram.materialShininessUniform = gl.getUniformLocation(shaderProgram, "uMaterialShininess");
+        shaderProgram.showSpecularHighlightsUniform = gl.getUniformLocation(shaderProgram, "uShowSpecularHighlights");
+        shaderProgram.useTexturesUniform = gl.getUniformLocation(shaderProgram, "uUseTextures");
+        shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
+        shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+        shaderProgram.pointLightingLocationUniform = gl.getUniformLocation(shaderProgram, "uPointLightingLocation");
+        shaderProgram.pointLightingSpecularColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingSpecularColor");
+        shaderProgram.pointLightingDiffuseColorUniform = gl.getUniformLocation(shaderProgram, "uPointLightingDiffuseColor");
+    }
+
+
+    function handleLoadedTexture(texture) {
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        gl.generateMipmap(gl.TEXTURE_2D);
+
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+
+
+    var earthTexture;
+    var galvanizedTexture;
+
+    function initTextures() {
+        earthTexture = gl.createTexture();
+        earthTexture.image = new Image();
+        earthTexture.image.onload = function () {
+            handleLoadedTexture(earthTexture)
+        }
+        earthTexture.image.src = "earth.jpg";
+
+        galvanizedTexture = gl.createTexture();
+        galvanizedTexture.image = new Image();
+        galvanizedTexture.image.onload = function () {
+            handleLoadedTexture(galvanizedTexture)
+        }
+        galvanizedTexture.image.src = "arroway.de_metal+structure+06_d100_flat.jpg";
+    }
+
+
+    var mvMatrix ;
+    var mvMatrixStack = [];
+    var pMatrix ;
+
+    function mvPushMatrix() {
+        var copy = new okMat4();
+        mvMatrix.clone(copy);
+        mvMatrixStack.push(copy);
+    }
+
+    function mvPopMatrix() {
+        if (mvMatrixStack.length == 0) {
+            throw "Invalid popMatrix!";
+        }
+        mvMatrix = mvMatrixStack.pop();
+    }
+
+
+    function setMatrixUniforms() {
+        gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix.toArray());
+        gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix.toArray());
+        
+        var normalMatrix = mvMatrix.inverse().transpose();
+        gl.uniformMatrix4fv(shaderProgram.nMatrixUniform, false, normalMatrix.toArray());
+    }
+
+	
+	
+	
+	
+	
+	
+    function degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+
+
+    var teapotVertexPositionBuffer;
+    var teapotVertexNormalBuffer;
+    var teapotVertexTextureCoordBuffer;
+    var teapotVertexIndexBuffer;
+
+    function handleLoadedTeapot(teapotData) {
+        teapotVertexNormalBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexNormalBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(teapotData.vertexNormals), gl.STATIC_DRAW);
+        teapotVertexNormalBuffer.itemSize = 3;
+        teapotVertexNormalBuffer.numItems = teapotData.vertexNormals.length / 3;
+
+        teapotVertexTextureCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexTextureCoordBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(teapotData.vertexTextureCoords), gl.STATIC_DRAW);
+        teapotVertexTextureCoordBuffer.itemSize = 2;
+        teapotVertexTextureCoordBuffer.numItems = teapotData.vertexTextureCoords.length / 2;
+
+        teapotVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexPositionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(teapotData.vertexPositions), gl.STATIC_DRAW);
+        teapotVertexPositionBuffer.itemSize = 3;
+        teapotVertexPositionBuffer.numItems = teapotData.vertexPositions.length / 3;
+
+        teapotVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(teapotData.indices), gl.STATIC_DRAW);
+        teapotVertexIndexBuffer.itemSize = 1;
+        teapotVertexIndexBuffer.numItems = teapotData.indices.length;
+
+        // document.getElementById("loadingtext").textContent = "";
+    }
+
+
+    function loadTeapot() {
+        var request = new XMLHttpRequest();
+        request.open("GET", "Teapot.json");
+        request.onreadystatechange = function () {
+            if (request.readyState == 4) {
+                handleLoadedTeapot(JSON.parse(request.responseText));
+            }
+        }
+        request.send();
+    }
+
+
+    var teapotAngle = 180;
+
+
+    function drawScene() {
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        if (teapotVertexPositionBuffer == null || teapotVertexNormalBuffer == null || teapotVertexTextureCoordBuffer == null || teapotVertexIndexBuffer == null) {
+            return;
+        }
+        
+        pMatrix = okMat4Proj(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+
+        // var specularHighlights = document.getElementById("specular").checked;
+        gl.uniform1i(shaderProgram.showSpecularHighlightsUniform, 1);
+
+        var lighting = document.getElementById("lighting").checked;
+        gl.uniform1i(shaderProgram.useLightingUniform, lighting);
+        if (lighting) {
+            gl.uniform3f(
+                shaderProgram.ambientColorUniform,
+                parseFloat(0.2),
+                parseFloat(0.2),
+                parseFloat(0,2)
+            );
+
+            gl.uniform3f(
+                shaderProgram.pointLightingLocationUniform,
+                parseFloat(-10),
+                parseFloat(4),
+                parseFloat(-20)
+            );
+
+            gl.uniform3f(
+                shaderProgram.pointLightingSpecularColorUniform,
+                parseFloat(0.8),
+                parseFloat(0.8),
+                parseFloat(0.8)
+            );
+
+            gl.uniform3f(
+                shaderProgram.pointLightingDiffuseColorUniform,
+                parseFloat(0.8),
+                parseFloat(0.8),
+                parseFloat(0.8)
+            );
+        }
+
+        var texture = "galvanized";
+        gl.uniform1i(shaderProgram.useTexturesUniform, 1);
+
+        mvMatrix = okMat4Trans(0, 0, -40);
+        mvMatrix.rot(OAK.SPACE_LOCAL, 23.4, 1, 0, -1, true);
+        mvMatrix.rotY(OAK.SPACE_LOCAL, teapotAngle, true);
+
+        gl.activeTexture(gl.TEXTURE0);
+        if (texture == "earth") {
+            gl.bindTexture(gl.TEXTURE_2D, earthTexture);
+        } else if (texture == "galvanized") {
+            gl.bindTexture(gl.TEXTURE_2D, galvanizedTexture);
+        }
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+        gl.uniform1f(shaderProgram.materialShininessUniform, parseFloat(32));
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, teapotVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, teapotVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, teapotVertexNormalBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, teapotVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
+        setMatrixUniforms();
+        gl.drawElements(gl.TRIANGLES, teapotVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+    }
+
+
+    var lastTime = 0;
+
+    function animate() {
+        var timeNow = new Date().getTime();
+        if (lastTime != 0) {
+            var elapsed = timeNow - lastTime;
+
+            teapotAngle += 0.05 * elapsed;
+        }
+        lastTime = timeNow;
+    }
+
+
+    function tick() {
+        okRequestAnimationFrame(tick);
+        drawScene();
+        animate();
+    }
+
+
+    function webGLStart() {
+        var canvas = document.getElementById("canvas");
+        initGL(canvas);
+        initShaders();
+        initTextures();
+        loadTeapot();
+
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.enable(gl.DEPTH_TEST);
+
+        tick();
+    }
+
+</script>
     <!-- Analytics -->
     
     
@@ -319,7 +719,7 @@
 
 
     
-        <body id="scheme-Paradox" class="lazy">
+        <body id="scheme-Paradox" class="lazy" onload="webGLStart();">
             <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
                 
 
@@ -507,11 +907,13 @@
 <p><img src="/images/20.png" alt=""> </p>
 <p>按照这个思路，我们可以通过计算光线与顶点的夹角的cos值来计算光照的效果。这种计算方式虽然简单，但是实际效果还是不错的。</p>
 <h2 id="带光照的demo"><a href="#带光照的demo" class="headerlink" title="带光照的demo"></a>带光照的demo</h2><p>下面这个demo演示添加了光照效果的茶壶，茶壶通过加载茶壶模型(带有茶壶顶点坐标，纹理坐标，法线向量等信息的json文件)，添加了环境光和一个点光源，可以通过开启和关闭光照来查看光照的效果。</p>
+<canvas id="canvas" style="border: none;" width="500" height="500"></canvas>
+<input type="checkbox" id="lighting" checked />启用光照<br/>
 <h2 id="shader代码"><a href="#shader代码" class="headerlink" title="shader代码"></a>shader代码</h2><p>shader代码的实现可以用两种方式，一种是在顶点着色器上实现光照效果，叫做逐顶点光照；另一种是在片段着色器上实现光照效果，叫逐片段光照。逐顶点光照只计算顶点缓冲中每个顶点的光照，顶点之间的像素点的光照则通过线性插值来计算。而逐片段光照则会计算每个像素点的光照，其中计算光照所用到的像素坐标和法线则通过顶点的数据线性插值得到。</p>
 <p>相对于逐顶点光照，逐片段光照会更加真实。考虑下面这个例子，B点的光线与顶点法线夹角接近0度，B点的亮度应该比A点和C点都要亮。但是使用逐顶点光照的话，B点的光照效果是A点和C点的平均值，这显然是不对的。</p>
 <p><img src="/images/21.png" alt=""> </p>
 <p>当然逐顶点光照也不是一定错误，如果场景中只有平行光的话，逐顶点光照是没错的。所以在场景中没有点光源或者物体上的光照效果真实性要求不高的情况下，会使用逐顶点光照，这样能够节省一些GPU资源（不需要为每个像素都计算和存储法线变量）。</p>
-<h3 id="逐顶点光照shader"><a href="#逐顶点光照shader" class="headerlink" title="逐顶点光照shader"></a>逐顶点光照shader</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">"per-vertex-lighting-vs"</span> <span class="attr">type</span>=<span class="string">"x-shader/x-vertex"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">    attribute vec3 aVertexPosition;</span></span><br><span class="line"><span class="undefined">    attribute vec3 aVertexNormal;</span></span><br><span class="line"><span class="undefined">    attribute vec2 aTextureCoord;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform mat4 uMVMatrix;</span></span><br><span class="line"><span class="undefined">    uniform mat4 uPMatrix;</span></span><br><span class="line"><span class="javascript">    uniform mat4 uNMatrix;<span class="comment">//uMVMatrix的逆转置矩阵，用于法线变换</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform vec3 uAmbientColor;</span></span><br><span class="line"><span class="javascript">	uniform float uMaterialShininess;<span class="comment">//材质光泽度</span></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform vec3 uPointLightingLocation;</span></span><br><span class="line"><span class="undefined">    uniform vec3 uPointLightingColor;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform bool uUseLighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    varying vec2 vTextureCoord;</span></span><br><span class="line"><span class="undefined">    varying vec3 vLightWeighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">void</span> main(<span class="keyword">void</span>) &#123;</span></span><br><span class="line"><span class="undefined">        vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);</span></span><br><span class="line"><span class="undefined">        gl_Position = uPMatrix * mvPosition;</span></span><br><span class="line"><span class="undefined">        vTextureCoord = aTextureCoord;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span> (!uUseLighting) &#123;</span></span><br><span class="line"><span class="undefined">            vLightWeighting = vec3(1.0, 1.0, 1.0);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="javascript">            <span class="comment">//计算点光源的光线方向</span></span></span><br><span class="line"><span class="undefined">            vec3 lightDirection = normalize(uPointLightingLocation - mvPosition.xyz);</span></span><br><span class="line"><span class="javascript">            <span class="comment">//计算顶点法线方向，因为顶点做了模型变换，所以法线也需要做变换</span></span></span><br><span class="line"><span class="undefined">            vec3 transformedNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;</span></span><br><span class="line"><span class="javascript">			<span class="comment">//只考虑夹角在0到90度之间的光线</span></span></span><br><span class="line"><span class="undefined">            float diffuseLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);</span></span><br><span class="line"><span class="javascript">			<span class="comment">//相机的位置始终在原点，所以观察方向就是片段的反方向</span></span></span><br><span class="line"><span class="undefined">			vec3 eyeDirection = normalize(-mvPosition.xyz);</span></span><br><span class="line"><span class="javascript">			<span class="comment">//使用reflect函数计算镜面反射的反射光的方向</span></span></span><br><span class="line"><span class="undefined">            vec3 reflectionDirection = reflect(-lightDirection, transformedNormal);</span></span><br><span class="line"><span class="javascript">			<span class="comment">//镜面反射效果通过公式(Rm · V)^a计算，Rm是前面计算的reflectionDirection，V是观察方向eyeDirection，a是材质的光泽度</span></span></span><br><span class="line"><span class="undefined">			float specularLightWeighting = = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uMaterialShininess);</span></span><br><span class="line"><span class="javascript">			<span class="comment">//合并不同光照的效果</span></span></span><br><span class="line"><span class="undefined">            vLightWeighting = uAmbientColor + uPointLightingColor * specularLightWeighting + uPointLightingColor * diffuseLightWeighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">"per-vertex-lighting-fs"</span> <span class="attr">type</span>=<span class="string">"x-shader/x-fragment"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    precision mediump float;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    varying vec2 vTextureCoord;</span></span><br><span class="line"><span class="undefined">    varying vec3 vLightWeighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform sampler2D uSampler;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">    <span class="keyword">void</span> main(<span class="keyword">void</span>) &#123;</span></span><br><span class="line"><span class="undefined">        vec4 fragmentColor  = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));</span></span><br><span class="line"><span class="javascript">		<span class="comment">//将光照效果乘上纹理颜色得到最终的rgb数值</span></span></span><br><span class="line"><span class="undefined">        gl_FragColor = vec4(fragmentColor.rgb * vLightWeighting, fragmentColor.a);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="逐顶点光照shader"><a href="#逐顶点光照shader" class="headerlink" title="逐顶点光照shader"></a>逐顶点光照shader</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">"per-vertex-lighting-vs"</span> <span class="attr">type</span>=<span class="string">"x-shader/x-vertex"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">    attribute vec3 aVertexPosition;</span></span><br><span class="line"><span class="undefined">    attribute vec3 aVertexNormal;</span></span><br><span class="line"><span class="undefined">    attribute vec2 aTextureCoord;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform mat4 uMVMatrix;</span></span><br><span class="line"><span class="undefined">    uniform mat4 uPMatrix;</span></span><br><span class="line"><span class="undefined">    uniform mat4 uNMatrix;//uMVMatrix的逆转置矩阵，用于法线变换</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform vec3 uAmbientColor;</span></span><br><span class="line"><span class="undefined">	uniform float uMaterialShininess;//材质光泽度</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform vec3 uPointLightingLocation;</span></span><br><span class="line"><span class="undefined">    uniform vec3 uPointLightingColor;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform bool uUseLighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    varying vec2 vTextureCoord;</span></span><br><span class="line"><span class="undefined">    varying vec3 vLightWeighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    void main(void) &#123;</span></span><br><span class="line"><span class="undefined">        vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);</span></span><br><span class="line"><span class="undefined">        gl_Position = uPMatrix * mvPosition;</span></span><br><span class="line"><span class="undefined">        vTextureCoord = aTextureCoord;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">        if (!uUseLighting) &#123;</span></span><br><span class="line"><span class="undefined">            vLightWeighting = vec3(1.0, 1.0, 1.0);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">        else &#123;</span></span><br><span class="line"><span class="undefined">            //计算点光源的光线方向</span></span><br><span class="line"><span class="undefined">            vec3 lightDirection = normalize(uPointLightingLocation - mvPosition.xyz);</span></span><br><span class="line"><span class="undefined">            //计算顶点法线方向，因为顶点做了模型变换，所以法线也需要做变换</span></span><br><span class="line"><span class="undefined">            vec3 transformedNormal = (uNMatrix * vec4(aVertexNormal,1.0)).xyz;</span></span><br><span class="line"><span class="undefined">			//只考虑夹角在0到90度之间的光线</span></span><br><span class="line"><span class="undefined">            float diffuseLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);</span></span><br><span class="line"><span class="undefined">			//相机的位置始终在原点，所以观察方向就是片段的反方向</span></span><br><span class="line"><span class="undefined">			vec3 eyeDirection = normalize(-mvPosition.xyz);</span></span><br><span class="line"><span class="undefined">			//使用reflect函数计算镜面反射的反射光的方向</span></span><br><span class="line"><span class="undefined">            vec3 reflectionDirection = reflect(-lightDirection, transformedNormal);</span></span><br><span class="line"><span class="undefined">			//镜面反射效果通过公式(Rm · V)^a计算，Rm是前面计算的reflectionDirection，V是观察方向eyeDirection，a是材质的光泽度</span></span><br><span class="line"><span class="undefined">			float specularLightWeighting = = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uMaterialShininess);</span></span><br><span class="line"><span class="undefined">			//合并不同光照的效果</span></span><br><span class="line"><span class="undefined">            vLightWeighting = uAmbientColor + uPointLightingColor * specularLightWeighting + uPointLightingColor * diffuseLightWeighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">id</span>=<span class="string">"per-vertex-lighting-fs"</span> <span class="attr">type</span>=<span class="string">"x-shader/x-fragment"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    precision mediump float;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    varying vec2 vTextureCoord;</span></span><br><span class="line"><span class="undefined">    varying vec3 vLightWeighting;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    uniform sampler2D uSampler;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="undefined">    void main(void) &#123;</span></span><br><span class="line"><span class="undefined">        vec4 fragmentColor  = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));</span></span><br><span class="line"><span class="undefined">		//将光照效果乘上纹理颜色得到最终的rgb数值</span></span><br><span class="line"><span class="undefined">        gl_FragColor = vec4(fragmentColor.rgb * vLightWeighting, fragmentColor.a);</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <h3 id="逐片段光照shader"><a href="#逐片段光照shader" class="headerlink" title="逐片段光照shader"></a>逐片段光照shader</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script id=<span class="string">"per-fragment-lighting-vs"</span> type=<span class="string">"x-shader/x-vertex"</span>&gt;</span><br><span class="line">    attribute vec3 aVertexPosition;</span><br><span class="line">    attribute vec3 aVertexNormal;</span><br><span class="line">    attribute vec2 aTextureCoord;</span><br><span class="line"></span><br><span class="line">    uniform mat4 uMVMatrix;</span><br><span class="line">    uniform mat4 uPMatrix;</span><br><span class="line">    uniform mat4 uNMatrix;</span><br><span class="line"></span><br><span class="line">    varying vec2 vTextureCoord;</span><br><span class="line">    varying vec3 vTransformedNormal;</span><br><span class="line">    varying vec4 vPosition;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> main(<span class="keyword">void</span>) &#123;</span><br><span class="line">        vPosition = uMVMatrix * vec4(aVertexPosition, <span class="number">1.0</span>);</span><br><span class="line">        gl_Position = uPMatrix * vPosition;</span><br><span class="line">        vTextureCoord = aTextureCoord;</span><br><span class="line">        vTransformedNormal = (uNMatrix * vec4(aVertexNormal, <span class="number">1.0</span>)).xyz;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script id="per-fragment-lighting-fs" type="x-shader/</span>x-fragment<span class="string">"&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    precision mediump float;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    varying vec2 vTextureCoord;</span></span><br><span class="line"><span class="string">    varying vec3 vTransformedNormal;//顶点着色器传递的片段法向量</span></span><br><span class="line"><span class="string">    varying vec4 vPosition;//顶点着色器传递的片段坐标</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    uniform bool uUseLighting;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    uniform vec3 uAmbientColor;</span></span><br><span class="line"><span class="string">	uniform float uMaterialShininess;//材质光泽度</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    uniform vec3 uPointLightingLocation;</span></span><br><span class="line"><span class="string">    uniform vec3 uPointLightingColor;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    uniform sampler2D uSampler;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    void main(void) &#123;</span></span><br><span class="line"><span class="string">        vec3 lightWeighting;</span></span><br><span class="line"><span class="string">        if (!uUseLighting) </span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            lightWeighting = vec3(1.0, 1.0, 1.0);</span></span><br><span class="line"><span class="string">        &#125; </span></span><br><span class="line"><span class="string">		else</span></span><br><span class="line"><span class="string">	    &#123;</span></span><br><span class="line"><span class="string">			vec3 lightDirection = normalize(uPointLightingLocation - vPosition.xyz);</span></span><br><span class="line"><span class="string">			//线性插值的法向量需要先归一化</span></span><br><span class="line"><span class="string">            vec3 normal = normalize(vTransformedNormal);</span></span><br><span class="line"><span class="string">			//与逐顶点光照类似</span></span><br><span class="line"><span class="string">			vec3 eyeDirection = normalize(-vPosition.xyz);</span></span><br><span class="line"><span class="string">            vec3 reflectionDirection = reflect(-lightDirection, normal);</span></span><br><span class="line"><span class="string">			float specularLightWeighting = = pow(max(dot(reflectionDirection, eyeDirection), 0.0), uMaterialShininess);</span></span><br><span class="line"><span class="string">            float diffuseLightWeighting = max(dot(normal, lightDirection), 0.0);</span></span><br><span class="line"><span class="string">            lightWeighting = uAmbientColor + uPointLightingColor * specularLightWeighting + uPointLightingColor * diffuseLightWeighting;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        vec4 fragmentColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));</span></span><br><span class="line"><span class="string">        gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
         
     
