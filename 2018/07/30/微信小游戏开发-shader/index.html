@@ -43,6 +43,8 @@
     
     <title>
         
+            微信小游戏开发-shader | 
+        
         LeoLu
     </title>
 
@@ -232,7 +234,7 @@
     <!-- WebAPP Icons -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="LeoLu">
-    <meta name="msapplication-starturl" content="http://lulier.github.io/cuda入门.html">
+    <meta name="msapplication-starturl" content="http://lulier.github.io/2018/07/30/微信小游戏开发-shader/">
     <meta name="msapplication-navbutton-color" content="#0097A7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="LeoLu">
@@ -247,13 +249,16 @@
     
 
     <!-- The Open Graph protocol -->
-    <meta property="og:url" content="http://lulier.github.io/cuda入门.html">
+    <meta property="og:url" content="http://lulier.github.io/2018/07/30/微信小游戏开发-shader/">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="LeoLu">
+    <meta property="og:title" content="微信小游戏开发-shader | LeoLu">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
     
 
+    
+        <meta property="article:published_time" content="Mon Jul 30 2018 14:37:58 GMT+0800">
+        <meta property="article:modified_time" content="Fri Sep 14 2018 20:54:47 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -261,13 +266,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="http://lulier.github.io/cuda入门.html" />
+        <link rel="canonical" href="http://lulier.github.io/2018/07/30/微信小游戏开发-shader/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
 
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "mainEntityOfPage": "http://lulier.github.io/2018/07/30/微信小游戏开发-shader/index.html",
+    "headline": "微信小游戏开发-shader",
+    "datePublished": "Mon Jul 30 2018 14:37:58 GMT+0800",
+    "dateModified": "Fri Sep 14 2018 20:54:47 GMT+0800",
+    "author": {
+        "@type": "Person",
+        "name": "Leo lu",
+        "image": {
+            "@type": "ImageObject",
+            "url": "http://7xoonl.com1.z0.glb.clouddn.com/headIcon.jpg"
+        },
+        "description": "Carpe diem"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "LeoLu",
+        "logo": {
+            "@type":"ImageObject",
+            "url": "/img/favicon.png"
+        }
+    },
+    "keywords": "",
+    "description": "",
+}
+</script>
 
 
     
@@ -303,6 +338,39 @@
 
                     <!-- Post TOC -->
 
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+
+    <!-- Left aligned menu below button -->
+    
+    
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#小游戏的shader开发"><span class="post-toc-number">1.</span> <span class="post-toc-text">小游戏的shader开发</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#毒气圈的实现"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">毒气圈的实现</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#代码"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">代码</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#GasShader"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">GasShader</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#gas-vert"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">gas.vert</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#gas-frag"><span class="post-toc-number">1.2.3.</span> <span class="post-toc-text">gas.frag</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#CircleRenderingCtrl"><span class="post-toc-number">1.2.4.</span> <span class="post-toc-text">CircleRenderingCtrl</span></a></li></ol></li></ol></li></ol>
+    </ul>
+    
+
+
+
 
 <!-- Layouts -->
 
@@ -329,7 +397,7 @@
         
     
             <p class="article-headline-p">
-                
+                微信小游戏开发-shader
             </p>
         </div>
 
@@ -348,7 +416,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>Leo lu</strong>
-        <span>8月 13, 2018</span>
+        <span>7月 30, 2018</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -380,7 +448,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=&url=http://lulier.github.io/cuda入门.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发-shader&url=http://lulier.github.io/2018/07/30/微信小游戏开发-shader/index.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 Auf Weibo teilen
             </li>
@@ -389,7 +457,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=&url=http://lulier.github.io/cuda入门.html&via=Leo lu" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发-shader&url=http://lulier.github.io/2018/07/30/微信小游戏开发-shader/index.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
                 Auf Twitter teilen
             </li>
@@ -398,7 +466,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/cuda入门.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/2018/07/30/微信小游戏开发-shader/index.html" target="_blank">
             <li class="mdl-menu__item">
                 Auf Facebook teilen
             </li>
@@ -407,7 +475,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/cuda入门.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/2018/07/30/微信小游戏开发-shader/index.html" target="_blank">
             <li class="mdl-menu__item">
                 Auf Google+ teilen
             </li>
@@ -432,7 +500,19 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <p>kernel调用是异步的，在kernel启动之后控制权就回到cpu，kernel等待上一个cuda调用结束之后会异步执行。<br>提升cuda程序的效率，在于合理的分配local men，share men和glocal men的使用。<br>cuda程序的执行被分配到了多个block的线程中独立执行，gpu设计的架构以sm为单位，</p>
+        <h1 id="小游戏的shader开发"><a href="#小游戏的shader开发" class="headerlink" title="小游戏的shader开发"></a>小游戏的shader开发</h1><p>由于小游戏的开发目前还主要是以2D为主，所以shader主要是用来对贴图进行自定义的裁剪处理，没有涉及到光照、贴图材质等内容。下面通过一个例子来说明小游戏开发中的shader编程。</p>
+<h2 id="毒气圈的实现"><a href="#毒气圈的实现" class="headerlink" title="毒气圈的实现"></a>毒气圈的实现</h2><p>在吃鸡类的游戏中，为了加快游戏的节奏，会有一个毒气圈的概念，被毒气覆盖的玩家会受到毒气的伤害。随着游戏的进行，安全区域会不断缩小，存活的玩家为了继续生存会往安全区域移动，与其它存活的玩家相遇。<br>如下图所示，我们通过在屏幕上覆盖一层蓝色的蒙板来表示当前区域被毒气覆盖，没有被蒙板覆盖的区域则为安全区域，安全区域是以地图上某个点为圆心的圆形区域。在游戏的过程中，通过扩大蓝色蒙板覆盖的范围来实现安全区域收缩的效果。</p>
+<p><img src="/images/12.png" alt=""></p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="GasShader"><a href="#GasShader" class="headerlink" title="GasShader"></a>GasShader</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> GasShader = &#123;</span><br><span class="line">	shaderPrograms: &#123;&#125;,<span class="comment">//存储glProgram</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//初始化gl程序</span></span><br><span class="line">	setShader: <span class="function"><span class="keyword">function</span> (<span class="params">sprite, shaderName</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">let</span> glProgram = <span class="keyword">this</span>.shaderPrograms[shaderName];</span><br><span class="line">		<span class="keyword">if</span> (!glProgram) &#123;</span><br><span class="line">			glProgram = <span class="keyword">new</span> cc.GLProgram();</span><br><span class="line">			<span class="keyword">let</span> vert = <span class="built_in">require</span>(cc.js.formatStr(<span class="string">'%s.vert'</span>, shaderName));</span><br><span class="line">			<span class="keyword">let</span> frag = <span class="built_in">require</span>(cc.js.formatStr(<span class="string">'%s.frag'</span>, shaderName));</span><br><span class="line">			<span class="comment">//设置shader</span></span><br><span class="line">			glProgram.initWithVertexShaderByteArray(vert, frag);</span><br><span class="line">			<span class="comment">//声明顶点着色器变量</span></span><br><span class="line">			glProgram.addAttribute(cc.macro.ATTRIBUTE_NAME_POSITION, cc.macro.VERTEX_ATTRIB_POSITION);</span><br><span class="line">			glProgram.addAttribute(cc.macro.ATTRIBUTE_NAME_COLOR, cc.macro.VERTEX_ATTRIB_COLOR);</span><br><span class="line">			glProgram.addAttribute(cc.macro.ATTRIBUTE_NAME_TEX_COORD, cc.macro.VERTEX_ATTRIB_TEX_COORDS);</span><br><span class="line">			glProgram.link();</span><br><span class="line">			glProgram.updateUniforms();</span><br><span class="line">			glProgram.use();</span><br><span class="line">			<span class="comment">//range用于指定安全区域的范围</span></span><br><span class="line">			glProgram.setUniformLocationWith1f(<span class="string">'range'</span>, <span class="number">1.5</span>);</span><br><span class="line">			<span class="comment">//centerTexCoord是安全区域圆心的坐标</span></span><br><span class="line">			glProgram.setUniformLocationWith2f(<span class="string">'centerTexCoord'</span>, <span class="number">0.5</span>, <span class="number">0.5</span>);</span><br><span class="line">			<span class="comment">//rate是sprite节点的宽高比</span></span><br><span class="line">			glProgram.setUniformLocationWith1f(<span class="string">'rate'</span>, sprite.node.width / sprite.node.height);</span><br><span class="line">			sprite._sgNode.setShaderProgram(glProgram);</span><br><span class="line">			<span class="keyword">this</span>.shaderPrograms[shaderName] = glProgram;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="comment">//设置shader参数</span></span><br><span class="line">	changeVariable: <span class="function"><span class="keyword">function</span>(<span class="params">range, centerX, centerY</span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">let</span> shaderName = <span class="string">'gas'</span>;</span><br><span class="line">		<span class="keyword">let</span> glProgram = <span class="keyword">this</span>.shaderPrograms[shaderName];</span><br><span class="line">	<span class="keyword">if</span> (glProgram)</span><br><span class="line">	&#123;</span><br><span class="line">		glProgram.use();</span><br><span class="line">		glProgram.setUniformLocationWith1f(<span class="string">'range'</span>, range);</span><br><span class="line">		glProgram.setUniformLocationWith2f(<span class="string">'centerTexCoord'</span>, centerX, centerY);</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = GasShader;</span><br></pre></td></tr></table></figure>
+<p>在GasShader脚步中主要是初始化了gl程序和设置shader默认参数，声明了三个全局的shader变量，其作用会在下面的shader代码中说明，其中range和centerTexCoord可以通过changeVariable来更新。</p>
+<h3 id="gas-vert"><a href="#gas-vert" class="headerlink" title="gas.vert"></a>gas.vert</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">module.exports =</span><br><span class="line">`</span><br><span class="line">attribute vec4 a_position;   //传入的默认的这张图片的顶点信息 </span><br><span class="line">attribute vec2 a_texCoord;  //传入的默认的这张图片的纹理</span><br><span class="line">attribute vec4 a_color;  //传入的默认的这张图片的颜色</span><br><span class="line">varying vec4 v_fragmentColor; </span><br><span class="line">varying vec2 v_texCoord; </span><br><span class="line"></span><br><span class="line">void main() </span><br><span class="line">&#123; </span><br><span class="line">	gl_Position = CC_PMatrix * a_position;   </span><br><span class="line">	v_fragmentColor = a_color; </span><br><span class="line">	v_texCoord = a_texCoord; </span><br><span class="line">&#125;`;</span><br></pre></td></tr></table></figure>
+<p>顶点着色器的内容很简单，仅仅是将顶点坐标换算成观察坐标，同时将UV坐标和片元颜色传递给片段着色器。</p>
+<h3 id="gas-frag"><a href="#gas-frag" class="headerlink" title="gas.frag"></a>gas.frag</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">module.exports =</span><br><span class="line">`</span><br><span class="line">#ifdef GL_ES</span><br><span class="line">precision lowp float;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">varying vec4 v_fragmentColor;</span><br><span class="line">varying vec2 v_texCoord;</span><br><span class="line">uniform vec2 centerTexCoord;</span><br><span class="line">uniform float range;</span><br><span class="line">uniform float rate;</span><br><span class="line"></span><br><span class="line">void main()</span><br><span class="line">&#123;</span><br><span class="line">	vec4 c = v_fragmentColor * texture2D(CC_Texture0, v_texCoord);</span><br><span class="line">	vec2 point = vec2(v_texCoord.x * rate,v_texCoord.y);</span><br><span class="line">	vec2 centerPoint = vec2(centerTexCoord.x * rate,centerTexCoord.y);  </span><br><span class="line">	gl_FragColor = c;</span><br><span class="line">	</span><br><span class="line">	if(length(point - centerPoint) &lt; range)</span><br><span class="line">	    discard;</span><br><span class="line"></span><br><span class="line">&#125;`;</span><br></pre></td></tr></table></figure>
+<p>在片段着色器中，我们首先计算出当前片段的颜色。接着我们使用片段的UV坐标来计算与传进来的centerTexCoord的距离，如果距离超过了我们定义的range，则丢弃这个片元。我们不能直接使用UV坐标来计算距离，因为当前渲染的sprite的宽高是不一样的，所以我们将x坐标乘上了传进来的宽高比rate。其实如果我们知道片元的世界坐标的话，可以直接用片元的世界坐标与安全区域圆心的世界坐标计算距离，但是我们从顶点着色器中得到的gl_Position是观察坐标，已经不是世界坐标。</p>
+<h3 id="CircleRenderingCtrl"><a href="#CircleRenderingCtrl" class="headerlink" title="CircleRenderingCtrl"></a>CircleRenderingCtrl</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> GasShader = <span class="built_in">require</span>(<span class="string">'GasShader'</span>);</span><br><span class="line"><span class="keyword">let</span> Util = <span class="built_in">require</span>(<span class="string">'Util'</span>);</span><br><span class="line"></span><br><span class="line">cc.Class(&#123;</span><br><span class="line">	extends: cc.Component,</span><br><span class="line">	</span><br><span class="line">	properties: &#123;</span><br><span class="line">		_x:<span class="number">0.5</span>,</span><br><span class="line">		_y:<span class="number">0.5</span>,</span><br><span class="line">		_r:<span class="number">1.2</span>,</span><br><span class="line">	&#125;,</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//初始化shader</span></span><br><span class="line">	onLoad: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">		GasShader.setShader(<span class="keyword">this</span>.node.getComponent(cc.Sprite), <span class="string">'gas'</span>);</span><br><span class="line">	&#125;,</span><br><span class="line">	</span><br><span class="line">	update: <span class="function"><span class="keyword">function</span>(<span class="params">dt</span>)</span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="comment">//获取当前矩形视野的四个角的坐标</span></span><br><span class="line">		<span class="keyword">let</span> camRect=<span class="built_in">window</span>.GGameEntry.BattleRoot.GetCameraViewArea();</span><br><span class="line">		<span class="comment">//获取当前的安全区域</span></span><br><span class="line">		<span class="keyword">let</span> circleMgr = <span class="built_in">window</span>.SceneMgr.GetBattleScene().getSceneBattleLogic().getBattleSystem().CircleMgr;</span><br><span class="line">		<span class="comment">//计算当前的安全区域相对于视野的坐标（0.0 - 1.0），circleMgr.CircleNode是安全区域圆心，circleMgr.PicR 是安全区域的半径</span></span><br><span class="line">		<span class="keyword">let</span> x=(circleMgr.CircleNode.x-camRect[<span class="number">0</span>]) / (camRect[<span class="number">2</span>]-camRect[<span class="number">0</span>]);</span><br><span class="line">		<span class="keyword">let</span> y=(circleMgr.CircleNode.y-camRect[<span class="number">1</span>]) / (camRect[<span class="number">3</span>]-camRect[<span class="number">1</span>]);</span><br><span class="line">		<span class="keyword">let</span> r= circleMgr.PicR / (camRect[<span class="number">3</span>]-camRect[<span class="number">1</span>]);</span><br><span class="line">	</span><br><span class="line">		<span class="keyword">if</span>(!Util.isNodeVisible(circleMgr.CircleNode))&#123;</span><br><span class="line">			x=<span class="number">0.5</span>;</span><br><span class="line">			y=<span class="number">0.5</span>;</span><br><span class="line">			r=<span class="number">1.2</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">		<span class="comment">//仅在属性变化的时候更新</span></span><br><span class="line">		<span class="keyword">if</span>(x !== <span class="keyword">this</span>._x || y !== <span class="keyword">this</span>._y || r !== <span class="keyword">this</span>._r)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">this</span>._x = x;</span><br><span class="line">			<span class="keyword">this</span>._y = y;</span><br><span class="line">			<span class="keyword">this</span>._r = r;</span><br><span class="line">			GasShader.changeVariable(r, x, <span class="number">1</span>-y);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>CircleRenderingCtrl 挂在实际渲染的节点上，首先是为节点上的sprite绑定shader，在每个update中去计算shader中的参数。<br>因为在片元着色器中我们实际上使用的是片元的UV坐标来计算距离，所以我们需要将安全区域的坐标转换成相对于视野的‘UV’坐标。<br>首先我们通过GetCameraViewArea接口获取了视野的矩形框坐标，也就是视野左上角、左下角、右下角、右上角的坐标，下面是GetCameraViewArea接口的实现。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GetCameraViewArea: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> v2CenterPos = <span class="keyword">this</span>.BattleCamera.node.position;</span><br><span class="line">	<span class="keyword">let</span> irzoomRatio = <span class="number">1</span> / <span class="keyword">this</span>.BattleCamera.zoomRatio;</span><br><span class="line">	<span class="keyword">var</span> sceneWidth = cc.visibleRect.width * irzoomRatio;</span><br><span class="line">	<span class="keyword">var</span> sceneHeight = cc.visibleRect.height * irzoomRatio;</span><br><span class="line">	<span class="keyword">this</span>.worldCameraFrame[<span class="number">0</span>] = v2CenterPos.x - sceneWidth * <span class="number">0.5</span>;</span><br><span class="line">	<span class="keyword">this</span>.worldCameraFrame[<span class="number">1</span>] = v2CenterPos.y - sceneHeight * <span class="number">0.5</span>;</span><br><span class="line">	<span class="keyword">this</span>.worldCameraFrame[<span class="number">2</span>] = v2CenterPos.x + sceneWidth * <span class="number">0.5</span>;</span><br><span class="line">	<span class="keyword">this</span>.worldCameraFrame[<span class="number">3</span>] = v2CenterPos.y + sceneHeight * <span class="number">0.5</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.worldCameraFrame;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>接着我们以视野的高度为单位1，将安全区域的坐标换算成相对于视野的‘UV’坐标。<br>最后我们在这几个shader参数发生变化的时候调用接口更新shader参数。</p>
 
         
     
@@ -482,11 +562,27 @@
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
+        <a href="/2018/08/04/微信小游戏开发-动态滑动列表/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Neuren
+        </a>
+    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
+    
+        <a href="/2018/07/24/微信小游戏开发-资源更新流程/" id="post_nav-older" class="next-content">
+            Älteren
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
     
 </nav>
 
@@ -638,6 +734,14 @@ It will not impact the appearance and can give developers a lot of support :)
 </aside>
 
                     
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
 
                     
 

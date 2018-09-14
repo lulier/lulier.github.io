@@ -43,6 +43,8 @@
     
     <title>
         
+            微信小游戏开发-美术字 | 
+        
         LeoLu
     </title>
 
@@ -232,7 +234,7 @@
     <!-- WebAPP Icons -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="LeoLu">
-    <meta name="msapplication-starturl" content="http://lulier.github.io/cuda入门.html">
+    <meta name="msapplication-starturl" content="http://lulier.github.io/微信小游戏开发-美术字.html">
     <meta name="msapplication-navbutton-color" content="#0097A7">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="LeoLu">
@@ -247,9 +249,9 @@
     
 
     <!-- The Open Graph protocol -->
-    <meta property="og:url" content="http://lulier.github.io/cuda入门.html">
+    <meta property="og:url" content="http://lulier.github.io/微信小游戏开发-美术字.html">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="LeoLu">
+    <meta property="og:title" content="微信小游戏开发-美术字 | LeoLu">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
     
@@ -261,7 +263,7 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="http://lulier.github.io/cuda入门.html" />
+        <link rel="canonical" href="http://lulier.github.io/微信小游戏开发-美术字.html" />
     
 
     <!-- Structured-data for SEO -->
@@ -329,7 +331,7 @@
         
     
             <p class="article-headline-p">
-                
+                微信小游戏开发-美术字
             </p>
         </div>
 
@@ -348,7 +350,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>Leo lu</strong>
-        <span>8月 13, 2018</span>
+        <span>7月 30, 2018</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -380,7 +382,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=&url=http://lulier.github.io/cuda入门.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发-美术字&url=http://lulier.github.io/微信小游戏开发-美术字.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 Auf Weibo teilen
             </li>
@@ -389,7 +391,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=&url=http://lulier.github.io/cuda入门.html&via=Leo lu" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发-美术字&url=http://lulier.github.io/微信小游戏开发-美术字.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
                 Auf Twitter teilen
             </li>
@@ -398,7 +400,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/cuda入门.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/微信小游戏开发-美术字.html" target="_blank">
             <li class="mdl-menu__item">
                 Auf Facebook teilen
             </li>
@@ -407,7 +409,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/cuda入门.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/微信小游戏开发-美术字.html" target="_blank">
             <li class="mdl-menu__item">
                 Auf Google+ teilen
             </li>
@@ -432,7 +434,9 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <p>kernel调用是异步的，在kernel启动之后控制权就回到cpu，kernel等待上一个cuda调用结束之后会异步执行。<br>提升cuda程序的效率，在于合理的分配local men，share men和glocal men的使用。<br>cuda程序的执行被分配到了多个block的线程中独立执行，gpu设计的架构以sm为单位，</p>
+        <h1 id="美术字"><a href="#美术字" class="headerlink" title="美术字"></a>美术字</h1><p>渲染批次对游戏的性能有很大的影响，降低渲染批次是提升游戏体验的有效优化方式。通常我们会将游戏中的散图打包成图集，这样做的好处是如果同一个父节点下的子节点所使用的贴图都来自于同一张图集的话，这些子节点的渲染可以在一个drawcall中完成，有效地降低了渲染的批次。<br>但是我们在使用cocos creator开发的过程中发现，在合并散图之后，战场中的UI渲染批次依然居高不下。通过分析我们发现，战场中的UI使用了许多的label，而cocos在渲染label的时候，会为每个label生成一张单独的贴图，这些label的渲染打断了原本合并的批次。如果使用美术字，将文字和数字也打包到图集里面，则可以避免这个问题。</p>
+<h2 id="中文字"><a href="#中文字" class="headerlink" title="中文字"></a>中文字</h2><p>我们只处理了战场内的中文字，因为战场外的UI界面没有那么高的合并批次的要求，所以还是使用cocos原来的label方案。<br>战场内UI中的文字基本都是提示性的文字，相对固定，所以处理起来也简单，直接由美术输出制作好的文字贴图，将原本的label换成sprite就行了。</p>
+<h2 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h2><p>由于在游戏中，数字label是一直在变化的（例如玩家的得分），不能简单的使用sprite替换来处理。我们修改了cocos的label组件，使其支持美术字的使用。</p>
 
         
     
