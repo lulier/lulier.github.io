@@ -43,7 +43,7 @@
     
     <title>
         
-            微信小游戏开发-美术字 | 
+            微信小游戏开发-label优化 | 
         
         LeoLu
     </title>
@@ -251,7 +251,7 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="http://lulier.github.io/微信小游戏开发-美术字.html">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="微信小游戏开发-美术字 | LeoLu">
+    <meta property="og:title" content="微信小游戏开发-label优化 | LeoLu">
     <meta property="og:image" content="/img/favicon.png">
     <meta property="og:description" content="">
     
@@ -331,7 +331,7 @@
         
     
             <p class="article-headline-p">
-                微信小游戏开发-美术字
+                微信小游戏开发-label优化
             </p>
         </div>
 
@@ -382,18 +382,18 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发-美术字&url=http://lulier.github.io/微信小游戏开发-美术字.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=微信小游戏开发-label优化&url=http://lulier.github.io/微信小游戏开发-美术字.html&pic=http://lulier.github.io/img/favicon.png&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
-                Auf Weibo teilen
+                分享到微博
             </li>
         </a>
     
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发-美术字&url=http://lulier.github.io/微信小游戏开发-美术字.html&via=Leo lu" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=微信小游戏开发-label优化&url=http://lulier.github.io/微信小游戏开发-美术字.html&via=Leo lu" target="_blank">
             <li class="mdl-menu__item">
-                Auf Twitter teilen
+                分享到 Twitter
             </li>
         </a>
     
@@ -402,7 +402,7 @@
     
         <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=http://lulier.github.io/微信小游戏开发-美术字.html" target="_blank">
             <li class="mdl-menu__item">
-                Auf Facebook teilen
+                分享到 Facebook
             </li>
         </a>
     
@@ -411,7 +411,7 @@
     
         <a class="post_share-link" href="https://plus.google.com/share?url=http://lulier.github.io/微信小游戏开发-美术字.html" target="_blank">
             <li class="mdl-menu__item">
-                Auf Google+ teilen
+                分享到 Google+
             </li>
         </a>
     
@@ -434,9 +434,13 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <h1 id="美术字"><a href="#美术字" class="headerlink" title="美术字"></a>美术字</h1><p>渲染批次对游戏的性能有很大的影响，降低渲染批次是提升游戏体验的有效优化方式。通常我们会将游戏中的散图打包成图集，这样做的好处是如果同一个父节点下的子节点所使用的贴图都来自于同一张图集的话，这些子节点的渲染可以在一个drawcall中完成，有效地降低了渲染的批次。<br>但是我们在使用cocos creator开发的过程中发现，在合并散图之后，战场中的UI渲染批次依然居高不下。通过分析我们发现，战场中的UI使用了许多的label，而cocos在渲染label的时候，会为每个label生成一张单独的贴图，这些label的渲染打断了原本合并的批次。如果使用美术字，将文字和数字也打包到图集里面，则可以避免这个问题。</p>
-<h2 id="中文字"><a href="#中文字" class="headerlink" title="中文字"></a>中文字</h2><p>我们只处理了战场内的中文字，因为战场外的UI界面没有那么高的合并批次的要求，所以还是使用cocos原来的label方案。<br>战场内UI中的文字基本都是提示性的文字，相对固定，所以处理起来也简单，直接由美术输出制作好的文字贴图，将原本的label换成sprite就行了。</p>
-<h2 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h2><p>由于在游戏中，数字label是一直在变化的（例如玩家的得分），不能简单的使用sprite替换来处理。我们修改了cocos的label组件，使其支持美术字的使用。</p>
+        <h1 id="label打断合批"><a href="#label打断合批" class="headerlink" title="label打断合批"></a>label打断合批</h1><p>渲染批次对游戏的性能有很大的影响，降低渲染批次是提升游戏体验的有效优化方式。通常我们会将游戏中的散图打包成图集，这样做的好处是如果同一个父节点下的子节点所使用的贴图都来自于同一张图集的话，这些子节点的渲染可以在一个drawcall中完成，有效地降低了渲染的批次。<br>但是我们在使用cocos creator开发的过程中发现，在合并散图之后，战场中的UI渲染批次依然居高不下。通过分析我们发现，战场中的UI使用了许多的label，而cocos在渲染label的时候，会为每个label创建一个离屏的canvas，将文字的渲染结果保存在一张单独的贴图上，这些label的渲染打断了原本合并的批次。如果使用位图字体（BMFont），将文字和数字也打包到图集里面，则可以避免这个问题。</p>
+<h1 id="固定的文字"><a href="#固定的文字" class="headerlink" title="固定的文字"></a>固定的文字</h1><p>对于游戏中固定的文字，可以直接输出文字对应的贴图来避免label的使用，从而避免合批的打断。</p>
+<h1 id="不确定的文字"><a href="#不确定的文字" class="headerlink" title="不确定的文字"></a>不确定的文字</h1><p>在游戏中会有XX玩家–击杀–XX玩家的提示性信息，由于玩家的名字在游戏制作过程中是无法确定的，所以玩家的名字需要实时渲染。如果是在每次触发提示的时候去设置label的内容的话，都会触发引擎调用updateLabel重新烘焙label，会造成不必要的卡顿。其实玩家的名字在进入战场的时候就已经知道了，我们完全可以对这些名字进行预烘焙。</p>
+<p>我们首先对所有的玩家名字都创建了不同颜色下的label，并手动调用了label的烘焙接口，最后将label缓存起来。由于这些缓存的label没有添加到场景中的节点下，所以label的update不会被触发。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">PutInCache: <span class="function"><span class="keyword">function</span> (<span class="params">playerName, ObjID</span>) </span>&#123;</span><br><span class="line">	<span class="comment">//每种颜色创建一个label</span></span><br><span class="line">       <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; Colors.length; i++) &#123;</span><br><span class="line">           <span class="keyword">if</span> (<span class="keyword">this</span>.PlayerNameLabelCache[i][ObjID]) &#123; <span class="comment">// 去除重复添加</span></span><br><span class="line">               <span class="keyword">continue</span>;</span><br><span class="line">           &#125;</span><br><span class="line">		<span class="comment">//创建label用于烘焙</span></span><br><span class="line">           <span class="keyword">let</span> node = cc.instantiate(<span class="keyword">this</span>.LabelPrefab);</span><br><span class="line">           <span class="keyword">let</span> label = node.getComponent(cc.Label);</span><br><span class="line">           label._initSgNode();</span><br><span class="line">           label.string = playerName;</span><br><span class="line">		<span class="comment">//获取渲染节点sgNode</span></span><br><span class="line">           label._sgNode._renderCmd._displayedColor = <span class="keyword">new</span> cc.Color().fromHEX(Colors[i]);</span><br><span class="line">           label._sgNode._renderCmd._bakeLabel();</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">this</span>.PlayerNameLabelCache[i][ObjID] = label;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
+<p>在需要设置玩家名字的时候，我们传入目标label和玩家id。根据颜色和玩家id取出缓存的label，使用缓存label的烘焙结果为目标label的_texture赋值，同时</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">GetOutCache: <span class="function"><span class="keyword">function</span> (<span class="params">targetLabel, ObjID, color, Type</span>) </span>&#123;</span><br><span class="line">       <span class="keyword">let</span> labelCache = <span class="keyword">this</span>.PlayerNameLabelCache[color][ObjID];</span><br><span class="line">       <span class="keyword">if</span> (labelCache) </span><br><span class="line">	&#123; </span><br><span class="line">		<span class="keyword">let</span> node = targetLabel.node;</span><br><span class="line">        <span class="keyword">let</span> contentSize = labelCache._sgNode._contentSize;</span><br><span class="line">		<span class="comment">//修改节点的大小</span></span><br><span class="line">        targetLabel.node._contentSize = cc.size(contentSize);</span><br><span class="line">        targetLabel._sgNode._contentSize = cc.size(contentSize);</span><br><span class="line">    	<span class="comment">//设置纹理</span></span><br><span class="line">        targetLabel._sgNode._renderCmd._texture = labelCache._sgNode._renderCmd._texture;</span><br><span class="line">		<span class="comment">//将_backLabel置空避免调用updatelabel改变label的大小</span></span><br><span class="line">        targetLabel._sgNode._renderCmd._bakeLabel = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        &#125;;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">   &#125;,</span><br></pre></td></tr></table></figure>
 
         
     
@@ -558,7 +562,7 @@
                 
                     <i class="material-icons sidebar-material-icons">home</i>
                 
-                Home
+                主页
             </a>
         </li>
         
@@ -571,7 +575,7 @@
                 
                     <i class="material-icons sidebar-material-icons">inbox</i>
                 
-                    Archive
+                    归档
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
@@ -613,7 +617,7 @@ It will not impact the appearance and can give developers a lot of support :)
 
     <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
         <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
-            Theme - Material
+            主题 - Material
             <span class="sidebar-badge badge-circle">i</span>
         </div>
     </a>
