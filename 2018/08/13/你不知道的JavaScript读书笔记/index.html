@@ -258,7 +258,7 @@
 
     
         <meta property="article:published_time" content="Mon Aug 13 2018 14:26:41 GMT+0800">
-        <meta property="article:modified_time" content="Thu Sep 20 2018 22:25:09 GMT+0800">
+        <meta property="article:modified_time" content="Thu Oct 18 2018 15:43:03 GMT+0800">
     
 
     <!-- The Twitter Card protocol -->
@@ -281,7 +281,7 @@
     "mainEntityOfPage": "http://lulier.github.io/2018/08/13/你不知道的JavaScript读书笔记/index.html",
     "headline": "你不知道的JavaScript读书笔记",
     "datePublished": "Mon Aug 13 2018 14:26:41 GMT+0800",
-    "dateModified": "Thu Sep 20 2018 22:25:09 GMT+0800",
+    "dateModified": "Thu Oct 18 2018 15:43:03 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "Leo lu",
@@ -491,11 +491,11 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <p>1.法作用域指的是定义在词法阶段的作用域，也即在代码编写阶段决定的作用域。</p>
-<p>2.js中的声明会在编译阶段前提</p>
-<p>3.当函数可以记住并访问所在的词法作用域，及时函数是在当前的词法作用域之外执行，这时就产生了闭包。</p>
-<p>4.JavaScript的this是在运行时动态绑定的</p>
-<p>5.如果传入一个原始值（字符串，布尔或者数字）作为this的绑定，则原始值会被转换成对象形式（new String()、new Boolean()、new Number()），这通常称为装箱。</p>
+        <p>1.词法作用域指的是定义在词法阶段的作用域，也即在代码编写阶段决定的作用域。</p>
+<p>2.js中的声明会在编译阶段前提（变量和函数的声明都会前提，但是let和const的变量不会前提）</p>
+<p>3.当函数可以记住并访问所在的词法作用域，即使函数是在当前的词法作用域之外执行，这时就产生了闭包。</p>
+<p>4.如果传入一个原始值（字符串，布尔或者数字）作为this的绑定，则原始值会被转换成对象形式（new String()、new Boolean()、new Number()），这通常称为装箱。</p>
+<p>5.JavaScript的this是在运行时动态绑定的。</p>
 <p>6.this绑定的优先级顺序：</p>
 <ul>
 <li>如果是new调用，this绑定到新创建的的对象，同时还继承了构造函数的原型，<strong>proto</strong>中的constructor指向这个构造function</li>
@@ -508,8 +508,9 @@
 <p>9.原型链是js中用于对象之间关联的机制</p>
 <p>10.js中没有类的概念，而是面向对象的。</p>
 <p>11.访问一个属性，如果对象中没有的话，则会在原型链上查找。而给属性赋值，如果对象没有该属性的话则会在对象上创建改属性。</p>
-<p>12.基于类模板的语言，在实现继承的时候每个子类实例都会将父类的实现拷贝并保存自己的一份。js中没有类的概念，如果A对象通过原型链关联了B对象的话，A对象持有的是对B对象的引用，并不会拷贝B对象的属性和方法。通过A.的方式也不会修改B对象的属性和方法。</p>
-<p>13.hasOwnProperty只在调用对象查找属性，in 会在对象的原型链上查找 </p>
+<p>12.基于类模板的语言，在实现继承的时候每个子类实例都会将父类的实现拷贝并保存自己的一份。js中没有类的概念，如果A对象通过原型链关联了B对象的话，A对象持有的是对B对象的引用，并不会拷贝B对象的属性和方法。</p>
+<p>13.如果使用原型链模拟继承的话需要注意，对于数值类型的属性，在修改的时候会为每个子类实例创建属性，不会改变父类的属性值。但是对于对象类型的属性，子类实例的修改会实际作用到父类属性上，所以对象类型的修改需要手动为子类实例创建新的对象属性。</p>
+<p>14.hasOwnProperty只在调用对象查找属性，in 会在对象的原型链上查找 </p>
 
         
     
